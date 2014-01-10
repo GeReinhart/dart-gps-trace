@@ -1,0 +1,7 @@
+cmd.txt
+packages
+.buildlog
+out
+
+*~
+*.swp
