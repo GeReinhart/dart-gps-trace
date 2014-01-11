@@ -1,10 +1,8 @@
-import 'dart:io';
 
+import 'dart:io';
 import 'package:unittest/unittest.dart';
 
-import '../lib/beans.dart';
-import '../lib/computers.dart';
-import '../lib/trace.dart';
+import '../lib/gps_trace.dart';
 
 main() {
   
@@ -26,7 +24,7 @@ main() {
       expect(trace.startPoint.longitude, equals(5.719580050));    
       expect(trace.startPoint.elevetion, equals(238));
       
-      expect(trace.difficulty, equals(17));
+      expect(trace.difficulty, equals(8));
       expect(trace.length, equals(8224));
       expect(trace.down, equals(35));
       expect(trace.distanceUp, equals(0));
@@ -39,8 +37,8 @@ main() {
     file = new File("test/resources/12590_with_errors.gpx");
     TraceAnalysis.fromGpxFile(file).then((trace){
       expect(trace.length, equals(8224));   
-      expect(trace.up, equals(6));
-      expect(trace.down, equals(35));
+      expect(trace.up, equals(480));
+      expect(trace.down, equals(509));
     });
     
     file = new File("test/resources/16231.gpx");
@@ -67,6 +65,44 @@ main() {
     expect(distance.round(), equals(5607));
   });
   
-  
+  test('Load purge gpx file', () {
+    File file = new File("test/resources/13523.gpx");
+    TraceAnalysis.fromGpxFile(file).then((trace){
+      
+      num originalDifficulty = trace.difficulty ;
+      num originalDensity = trace.pointDensity ;
+      num originalLength = trace.length ;
+      num originalNumberOfPoints = trace.points.length ;
+      num originalUp =  trace.up;
+      TracePoint orignialUpperPoint =  trace.upperPoint ;
+      List<TracePoint> orignalPoints = trace.points;
+
+      print("trace.difficulty: ${trace.difficulty}");
+      print("trace.length: ${trace.length}");
+      print("trace.pointDensity: ${trace.pointDensity}");
+      print("trace.points.length: ${trace.points.length}");
+      print("trace.up: ${trace.up}");
+      print("trace.upperPoint.elevetion: ${trace.upperPoint.elevetion}");
+      print("trace.lowerPoint.elevetion: ${trace.lowerPoint.elevetion}");
+      
+      TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger( 1000/20 , 1200  ) ;
+      
+      TraceRawData data = new TraceRawData();
+      data.points = new List<TracePoint>();
+      data.points.addAll(orignalPoints);
+      var purgedData = traceRawDataPurger.purge(data);
+      
+      TraceAnalysis purgeTrace = new TraceAnalysis.fromPoints(purgedData);
+      
+      print("purgeTrace.difficulty: ${purgeTrace.difficulty}");
+      print("purgeTrace.length: ${purgeTrace.length}");
+      print("purgeTrace.pointDensity: ${purgeTrace.pointDensity}");
+      print("purgeTrace.points.length: ${purgeTrace.points.length}");
+      print("purgeTrace.up: ${purgeTrace.up}");
+      print("purgeTrace.upperPoint.elevetion: ${purgeTrace.upperPoint.elevetion}");
+      print("purgeTrace.lowerPoint.elevetion: ${purgeTrace.lowerPoint.elevetion}");
+      
+    });
+  });
   
 }
