@@ -7,7 +7,7 @@ function get-dart-dependencies {
 
 function test-dart-sources {
 	echo "test-dart-sources"
-	dart test/model_tests.dart || { echo 'test-dart-sources failed' ; exit 1; }
+	dart test/trace_tests.dart || { echo 'test-dart-sources failed' ; exit 1; }
 }
 
 
