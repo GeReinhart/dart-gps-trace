@@ -65,27 +65,30 @@ main() {
     expect(distance.round(), equals(5607));
   });
   
-  test('Load purge gpx file', () {
-    File file = new File("test/resources/13523.gpx");
-    TraceAnalysis.fromGpxFile(file).then((trace){
+  void checkTrace(String filePath,  num expectedUp, num expectedLength ){
+    
+    File file = new File(filePath);
+    TraceAnalysis.fromGpxFile(file).then((originalTrace){
       
-      num originalDifficulty = trace.difficulty ;
-      num originalDensity = trace.pointDensity ;
-      num originalLength = trace.length ;
-      num originalNumberOfPoints = trace.points.length ;
-      num originalUp =  trace.up;
-      TracePoint orignialUpperPoint =  trace.upperPoint ;
-      List<TracePoint> orignalPoints = trace.points;
+      print("=============: ${filePath}");
+      
+      num originalDifficulty = originalTrace.difficulty ;
+      num originalDensity = originalTrace.pointDensity ;
+      num originalLength = originalTrace.length ;
+      num originalNumberOfPoints = originalTrace.points.length ;
+      num originalUp =  originalTrace.up;
+      TracePoint orignialUpperPoint =  originalTrace.upperPoint ;
+      List<TracePoint> orignalPoints = originalTrace.points;
 
-      print("trace.difficulty: ${trace.difficulty}");
-      print("trace.length: ${trace.length}");
-      print("trace.pointDensity: ${trace.pointDensity}");
-      print("trace.points.length: ${trace.points.length}");
-      print("trace.up: ${trace.up}");
-      print("trace.upperPoint.elevetion: ${trace.upperPoint.elevetion}");
-      print("trace.lowerPoint.elevetion: ${trace.lowerPoint.elevetion}");
+      print("originalTrace.difficulty: ${originalTrace.difficulty}");
+      print("originalTrace.length: ${originalTrace.length} (expected ${expectedLength})");
+      print("originalTrace.pointDensity: ${originalTrace.pointDensity}");
+      print("originalTrace.points.length: ${originalTrace.points.length}");
+      print("originalTrace.up: ${originalTrace.up} (expected ${expectedUp})");
+      print("originalTrace.upperPoint.elevetion: ${originalTrace.upperPoint.elevetion}");
+      print("originalTrace.lowerPoint.elevetion: ${originalTrace.lowerPoint.elevetion}");
       
-      TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger( 1000/20 , 1200  ) ;
+      TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger( 1000/20 , 3500  ) ;
       
       TraceRawData data = new TraceRawData();
       data.points = new List<TracePoint>();
@@ -95,14 +98,44 @@ main() {
       TraceAnalysis purgeTrace = new TraceAnalysis.fromPoints(purgedData);
       
       print("purgeTrace.difficulty: ${purgeTrace.difficulty}");
-      print("purgeTrace.length: ${purgeTrace.length}");
+      print("purgeTrace.length: ${purgeTrace.length} (expected ${expectedLength})");
       print("purgeTrace.pointDensity: ${purgeTrace.pointDensity}");
       print("purgeTrace.points.length: ${purgeTrace.points.length}");
-      print("purgeTrace.up: ${purgeTrace.up}");
+      print("purgeTrace.up: ${purgeTrace.up} (expected ${expectedUp})");
       print("purgeTrace.upperPoint.elevetion: ${purgeTrace.upperPoint.elevetion}");
       print("purgeTrace.lowerPoint.elevetion: ${purgeTrace.lowerPoint.elevetion}");
       
+      num errorPercentage = 0.025 ;
+      expect ( purgeTrace.length , greaterThan( expectedLength * (1-errorPercentage)  ) ) ;
+      expect ( purgeTrace.length , lessThan( expectedLength * (1+errorPercentage)  ) ) ;
+      
+      errorPercentage = 0.06 ;
+      expect ( purgeTrace.up , greaterThan( expectedUp * (1-errorPercentage)  ) ) ;
+      expect ( purgeTrace.up , lessThan( expectedUp * (1+errorPercentage)  ) ) ;
+      
+      
     });
+    
+  }  
+   
+  
+  test('Purge gpx file check values compared to other websites', () {
+    
+    // http://www.openrunner.com/index.php?id=2310762
+    checkTrace("test/resources/openrunner.com.2310762.gpx", 10115, 167832) ;
+    // http://www.openrunner.com/index.php?id=3112821
+    checkTrace("test/resources/openrunner.com.3112821.gpx", 8810, 165037) ;
+    // http://www.tracegps.com/fr/parcours/circuit4027.htm
+    checkTrace("test/resources/tracegps.com.4027.gpx", 5389, 81780) ;
+    // http://www.trail-passion.net/?id=135
+    checkTrace("test/resources/trail-passion.net.135.gpx", 10102, 135000) ;
+    
+    
   });
+
+  
+  
+  
+  
   
 }

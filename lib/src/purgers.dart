@@ -3,6 +3,11 @@ part of gps_trace;
 
 class TraceRawDataPurger{
   
+  static const num ALIGNMENT_ALLOWED_ERROR =  0.015 ;
+  static const num SMOOTHING_DENSITY_THRESHOLD =  1000/30 ;
+  static const num SMOOTHING_THRESHOLD =  10;
+  static const num EVERAGE_ELEVETION_POINTS_NUMBER =  9;
+  
   num maxDensity ;
   num maxPointNumber;
   
@@ -11,57 +16,80 @@ class TraceRawDataPurger{
   TraceRawData purge(TraceRawData input){
     
     PurgerData purgerData = _analyse(input);
-    num currentDensity = purgerData.density;
-    num currentPointNumber = input.points.length;
-    if ( currentDensity<=maxDensity && currentPointNumber<=maxPointNumber  ){
-      return input;
+    TraceRawData purgedTraceRawData = input;
+    if ( purgerData.density > SMOOTHING_DENSITY_THRESHOLD ){
+      purgedTraceRawData = _purgeAlignedPoints(input,purgerData) ;
+      purgedTraceRawData = _applySmoothing(purgedTraceRawData,purgerData,SMOOTHING_THRESHOLD);
+      purgedTraceRawData = _applyElevetionAverage(purgedTraceRawData,purgerData);
     }
+    return purgedTraceRawData;
+  }
 
-    num densityWithMaxPointNumber = maxPointNumber / purgerData.length * 1000 ;
-    if (densityWithMaxPointNumber > maxDensity){
-      return _purgeByDensityMax(input,purgerData,maxDensity);
-    }else{
-      return _purgeByDensityMax(input,purgerData,densityWithMaxPointNumber);
+  TraceRawData _applySmoothing(TraceRawData data, PurgerData purgerData, num smoothingThreshold){
+    for(int i = 1 ; i < data.points.length - 1; i++  ){
+      TracePoint previousPoint = data.points.elementAt(i-1);
+      TracePoint currentPoint = data.points.elementAt(i);
+      TracePoint nextPoint = data.points.elementAt(i+1);
+      
+      if (  currentPoint.elevetion - smoothingThreshold > previousPoint.elevetion 
+         || currentPoint.elevetion + smoothingThreshold < previousPoint.elevetion
+         ){
+        currentPoint.elevetion = (  previousPoint.elevetion + nextPoint.elevetion  ) / 2 ;
+      }
     }
+    return data;
   }
   
-  TraceRawData _purgeByDensityMax(TraceRawData data, PurgerData purgerData, num maxDensity){
+  TraceRawData _applyElevetionAverage(TraceRawData data, PurgerData purgerData){
+    int pointsToMergeEachSide = (EVERAGE_ELEVETION_POINTS_NUMBER-1)~/2 ;
+    
+    for(int i = pointsToMergeEachSide ; i < data.points.length - pointsToMergeEachSide -1 ; i++  ){
+      TracePoint currentPoint = data.points.elementAt(i);
+      num elevetion= 0;
+      for ( int j = i-pointsToMergeEachSide ; j  <= i + pointsToMergeEachSide ; j++    ){
+        elevetion+=data.points.elementAt(j).elevetion;
+      }
+      currentPoint.elevetion = elevetion / (pointsToMergeEachSide*2+1) ;
+    }
+    return data;
+  }   
+  
+  TraceRawData _purgeAlignedPoints(TraceRawData data, PurgerData purgerData){
     
     TraceRawData purgedRawData = new TraceRawData();
-    BaryCenterComputer baryCenterComputer = new BaryCenterComputer();
-
-    double numberCurrentPointsToReplace = purgerData.density / maxDensity ;
-
     List<TracePoint> points = new List<TracePoint>() ;
-    List<TracePoint> pointsToMerge = new List<TracePoint>() ;
-    int numberPointComputed= 0;
-    for (var iter = data.points.iterator; iter.moveNext();) {
-      TracePoint currentPoint = iter.current ;
-      numberPointComputed++;
+    DistanceComputer distanceComputer = new DistanceComputer();
+    
+    
+    points.add(data.points.elementAt(0)) ;
+    for(int i = 1 ; i < data.points.length - 1; i++  ){
+      TracePoint previousPoint = data.points.elementAt(i-1);
+      TracePoint currentPoint = data.points.elementAt(i);
+      TracePoint nextPoint = data.points.elementAt(i+1);
       
-      if ( purgerData.importantPoints.contains(currentPoint)  ){
-        // Important point
-        if(pointsToMerge.isNotEmpty){
-          points.add(baryCenterComputer.baryCenter(pointsToMerge));
-          pointsToMerge = new List<TracePoint>() ;
+      double  previousToCurrent = distanceComputer.distance(previousPoint, currentPoint) ;
+      double  currentToNext = distanceComputer.distance(currentPoint, nextPoint) ;
+      double  previousToNext = distanceComputer.distance(previousPoint, nextPoint) ;
+
+      if (  (previousToCurrent+currentToNext) * (1-ALIGNMENT_ALLOWED_ERROR) <  previousToNext ){
+        if (  previousPoint.elevetion <= currentPoint.elevetion 
+          &&   currentPoint.elevetion <=  nextPoint.elevetion 
+          ||
+              previousPoint.elevetion >= currentPoint.elevetion 
+          &&   currentPoint.elevetion >=  nextPoint.elevetion          
+          ){
         }
-        points.add(currentPoint);
+        continue ;
       }
-      else{
-        // Not important point
-        double avgCurrentPointsReplaced = numberPointComputed/points.length ;
-        if (  avgCurrentPointsReplaced > numberCurrentPointsToReplace    ) {
-          points.add(baryCenterComputer.baryCenter(pointsToMerge)) ;
-          pointsToMerge = new List<TracePoint>() ;
-          pointsToMerge.add(currentPoint) ;
-        }else{
-          pointsToMerge.add(currentPoint) ;
-        }
-      }
+      points.add(currentPoint) ;
     }
+    points.add(data.points.elementAt(data.points.length-1)) ;
+    
     purgedRawData.points = points;
+    
     return purgedRawData;
   }
+  
   
   PurgerData _analyse(TraceRawData data){
     StreamController pointStream = new StreamController.broadcast( sync: true);
