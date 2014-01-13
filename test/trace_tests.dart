@@ -127,8 +127,6 @@ main() {
     checkTrace("test/resources/openrunner.com.3112821.gpx", 8810, 165037) ;
     // http://www.tracegps.com/fr/parcours/circuit4027.htm
     checkTrace("test/resources/tracegps.com.4027.gpx", 5389, 81780) ;
-    // http://www.trail-passion.net/?id=135
-    checkTrace("test/resources/trail-passion.net.135.gpx", 10102, 135000) ;
     
     
   });
