@@ -88,14 +88,16 @@ main() {
       print("originalTrace.upperPoint.elevetion: ${originalTrace.upperPoint.elevetion}");
       print("originalTrace.lowerPoint.elevetion: ${originalTrace.lowerPoint.elevetion}");
       
-      TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger( 1000/20 , 3500  ) ;
+      TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger(3500) ;
       
       TraceRawData data = new TraceRawData();
       data.points = new List<TracePoint>();
       data.points.addAll(orignalPoints);
-      var purgedData = traceRawDataPurger.purge(data);
+      PurgerResult purgedData = traceRawDataPurger.purge(data);
       
-      TraceAnalysis purgeTrace = new TraceAnalysis.fromPoints(purgedData);
+      TraceAnalysis purgeTrace = new TraceAnalysis.fromPoints(purgedData.rawData);
+      
+      purgedData.purgerData.actions.forEach( (action) => print( " done : " + action.toString())  ) ;
       
       print("purgeTrace.difficulty: ${purgeTrace.difficulty}");
       print("purgeTrace.length: ${purgeTrace.length} (expected ${expectedLength})");
@@ -121,11 +123,11 @@ main() {
   
   test('Purge gpx file check values compared to other websites', () {
     
-    // http://www.openrunner.com/index.php?id=2310762
+    // http://www.openrunner.com/index.php?id=2310762 (ut4m)
     checkTrace("test/resources/openrunner.com.2310762.gpx", 10115, 167832) ;
-    // http://www.openrunner.com/index.php?id=3112821
+    // http://www.openrunner.com/index.php?id=3112821 (utmb)
     checkTrace("test/resources/openrunner.com.3112821.gpx", 8810, 165037) ;
-    // http://www.tracegps.com/fr/parcours/circuit4027.htm
+    // http://www.tracegps.com/fr/parcours/circuit4027.htm (grands ducs)
     checkTrace("test/resources/tracegps.com.4027.gpx", 5389, 81780) ;
     
     
