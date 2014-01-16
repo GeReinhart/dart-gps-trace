@@ -46,6 +46,10 @@ class TraceRawDataPurger{
       TracePoint currentPoint = data.points.elementAt(i);
       TracePoint nextPoint = data.points.elementAt(i+1);
       
+      if (_isImportantPoint(purgerData,currentPoint)){
+        continue;
+      }
+      
       if (  currentPoint.elevetion - smoothingThreshold > previousPoint.elevetion 
          || currentPoint.elevetion + smoothingThreshold < previousPoint.elevetion
          ){
@@ -73,6 +77,11 @@ class TraceRawDataPurger{
     
     for(int i = pointsToMergeEachSide ; i < data.points.length - pointsToMergeEachSide -1 ; i++  ){
       TracePoint currentPoint = data.points.elementAt(i);
+      
+      if (_isImportantPoint(purgerData,currentPoint)){
+        continue;
+      }      
+      
       num elevetion= 0;
       for ( int j = i-pointsToMergeEachSide ; j  <= i + pointsToMergeEachSide ; j++    ){
         elevetion+=data.points.elementAt(j).elevetion;
@@ -86,23 +95,16 @@ class TraceRawDataPurger{
     TraceRawData purgedTraceRawData = data ;
     PurgerAction action = new PurgerAction();
     action.action= "PurgeAlignedPoints" ;
-    if (data.points.length <=  idealMaxPointNumber  ){
-      purgedTraceRawData = _purgeAlignedPointsWithAllowedError(data,purgerData,ALIGNMENT_ALLOWED_ERROR_STEP) ;
-      action.parameterName ="ErrorPercentage" ;
-      action.parameterValue =ALIGNMENT_ALLOWED_ERROR_STEP ;
+    action.parameterName ="ErrorPercentage" ;
+    if (data.points.length >  idealMaxPointNumber  ){
       purgerData.actions.add(action);
-    }else{
       for (int i=1 ; i<= 3 ; i++ ){
         purgedTraceRawData = _purgeAlignedPointsWithAllowedError(data,purgerData,ALIGNMENT_ALLOWED_ERROR_STEP*i) ;
-        action.parameterName ="ErrorPercentage" ;
+        action.parameterValue =ALIGNMENT_ALLOWED_ERROR_STEP*i ;
         if (  purgedTraceRawData.points.length <=  idealMaxPointNumber ){
-          action.parameterValue =ALIGNMENT_ALLOWED_ERROR_STEP*i ;
-          purgerData.actions.add(action);
           return purgedTraceRawData;
         }
       }
-      action.parameterValue =ALIGNMENT_ALLOWED_ERROR_STEP*3 ;
-      purgerData.actions.add(action);
     }
     return purgedTraceRawData; 
   }
@@ -119,6 +121,11 @@ class TraceRawDataPurger{
       TracePoint previousPoint = data.points.elementAt(i-1);
       TracePoint currentPoint = data.points.elementAt(i);
       TracePoint nextPoint = data.points.elementAt(i+1);
+      
+      if (_isImportantPoint(purgerData,currentPoint)){
+        points.add(currentPoint) ;
+        continue;
+      }      
       
       double  previousToCurrent = distanceComputer.distance(previousPoint, currentPoint) ;
       double  currentToNext = distanceComputer.distance(currentPoint, nextPoint) ;
@@ -162,7 +169,13 @@ class TraceRawDataPurger{
     return purgerData;
   }
 
+  bool _isImportantPoint(PurgerData purgerData, TracePoint currentPoint) {
+    return purgerData.importantPoints != null && purgerData.importantPoints.contains(currentPoint);
+  }
+  
 }
+
+
 
 class PurgerResult{
   TraceRawData rawData ;

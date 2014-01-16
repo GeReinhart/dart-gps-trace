@@ -95,7 +95,7 @@ main() {
       data.points.addAll(orignalPoints);
       PurgerResult purgedData = traceRawDataPurger.purge(data);
       
-      TraceAnalysis purgeTrace = new TraceAnalysis.fromPoints(purgedData.rawData);
+      TraceAnalysis purgeTrace = originalTrace.computeNewPurgedTraceAnalysis(idealMaxPointNumber: 3500);
       
       purgedData.purgerData.actions.forEach( (action) => print( " done : " + action.toString())  ) ;
       
