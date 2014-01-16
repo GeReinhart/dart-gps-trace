@@ -157,11 +157,18 @@ class LengthUpFlatDownComputer{
 
 class UpComputer{
   
+  
   DistanceComputer distanceComputer = new DistanceComputer();
   TracePoint _previousPoint ;
-  double _up = 0.0 ;
+  num _elevetionThreshold ;
+  num _minDistanceThreshold ;
+  num _up = 0.0 ;
+  TracePoint _lowBase ;
+  TracePoint _upBase ;
   
-  UpComputer(Stream stream){
+  UpComputer(Stream stream, {elevetionThreshold:60,minDistanceThreshold:200}){
+    this._elevetionThreshold = elevetionThreshold;
+    this._minDistanceThreshold = minDistanceThreshold;
     stream.listen((point) => _compute(point as TracePoint)) ;
   }
   
@@ -169,10 +176,36 @@ class UpComputer{
     if(point==null){
       return;
     }    
-    if(  _previousPoint != null ){
-      if (  _previousPoint.elevetion  < point.elevetion  ){
-        _up += point.elevetion - _previousPoint.elevetion ;  
-      }
+    if(point.elevetion==null){
+      return;
+    }  
+    if(  _previousPoint == null ){
+      _lowBase = point;
+      _upBase = point ;
+    }else{
+      
+      if ( _lowBase.elevetion > point.elevetion  ){
+          // lower than the lower point
+          _lowBase = point ;
+          _upBase = point ;
+      }else{
+          // higher than the lower point 
+          if ( _upBase.elevetion < point.elevetion ){
+             // higher than the higher point
+             _upBase = point ;
+          }else{
+             // between lower and higher point
+             if ( _upBase.elevetion - _elevetionThreshold  > point.elevetion){
+                // register the up
+                num distanceLowUp = distanceComputer.distance(_upBase,_lowBase).abs() ;
+                if( distanceLowUp > _minDistanceThreshold  ){
+                 _up += _upBase.elevetion - _lowBase.elevetion ;
+                 _lowBase = point ;
+                 _upBase = point;
+                }
+             }
+          }
+       }
     }
     _previousPoint = point ;
   }

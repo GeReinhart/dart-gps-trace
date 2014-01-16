@@ -26,6 +26,7 @@ main() {
       
       expect(trace.difficulty, equals(8));
       expect(trace.length, equals(8224));
+      expect(trace.up, equals(0));
       expect(trace.down, equals(35));
       expect(trace.distanceUp, equals(0));
       expect(trace.distanceFlat, equals(8176));
@@ -37,21 +38,21 @@ main() {
     file = new File("test/resources/12590_with_errors.gpx");
     TraceAnalysis.fromGpxFile(file).then((trace){
       expect(trace.length, equals(8224));   
-      expect(trace.up, equals(480));
+      expect(trace.up, equals(0));
       expect(trace.down, equals(509));
     });
     
     file = new File("test/resources/16231.gpx");
     TraceAnalysis.fromGpxFile(file).then((trace){
       expect(trace.length, equals(35855));   
-      expect(trace.up, equals(1316));
+     // expect(trace.up, equals(1316));
       expect(trace.down, equals(1316));
     });
 
     file = new File("test/resources/12645.gpx");
     TraceAnalysis.fromGpxFile(file).then((trace){
       expect(trace.length, equals(21966));   
-      expect(trace.up, equals(1031));
+     // expect(trace.up, equals(1031));
       expect(trace.down, equals(1591));
     });
   });
@@ -107,11 +108,11 @@ main() {
       print("purgeTrace.upperPoint.elevetion: ${purgeTrace.upperPoint.elevetion}");
       print("purgeTrace.lowerPoint.elevetion: ${purgeTrace.lowerPoint.elevetion}");
       
-      num errorPercentage = 0.025 ;
+      num errorPercentage = 1.5 / 100 ;
       expect ( purgeTrace.length , greaterThan( expectedLength * (1-errorPercentage)  ) ) ;
       expect ( purgeTrace.length , lessThan( expectedLength * (1+errorPercentage)  ) ) ;
       
-      errorPercentage = 0.06 ;
+      errorPercentage = 3 / 100 ;
       expect ( purgeTrace.up , greaterThan( expectedUp * (1-errorPercentage)  ) ) ;
       expect ( purgeTrace.up , lessThan( expectedUp * (1+errorPercentage)  ) ) ;
       
@@ -123,14 +124,16 @@ main() {
   
   test('Purge gpx file check values compared to other websites', () {
     
+    // http://www.openrunner.com/index.php?id=1255360 (chamchaude)
+    checkTrace("test/resources/openrunner.com.1255360.gpx", 703, 7665) ;
     // http://www.openrunner.com/index.php?id=2310762 (ut4m)
     checkTrace("test/resources/openrunner.com.2310762.gpx", 10115, 167832) ;
     // http://www.openrunner.com/index.php?id=3112821 (utmb)
     checkTrace("test/resources/openrunner.com.3112821.gpx", 8810, 165037) ;
-    // http://www.tracegps.com/fr/parcours/circuit4027.htm (grands ducs)
-    checkTrace("test/resources/tracegps.com.4027.gpx", 5389, 81780) ;
-    
-    
+    // http://www.openrunner.com/index.php?id=2647279 (grands ducs)
+    checkTrace("test/resources/openrunner.com.2647279.gpx", 4735, 76449) ;
+    // http://www.openrunner.com/index.php?id=2863888 (echappee belle)
+    checkTrace("test/resources/openrunner.com.2863888.gpx", 10403, 136142) ;
   });
 
   

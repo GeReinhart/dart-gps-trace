@@ -61,7 +61,7 @@ class TraceRawDataPurger{
   
   TraceRawData _applyElevetionAverage(TraceRawData data, PurgerData purgerData){
     TraceRawData purgedTraceRawData = data ;
-    int pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate() - 2 ;
+    int pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate() - 4 ;
     if (pointsToMergeEachSide>0){
       purgedTraceRawData = _applyElevetionAverageWithMergeWidth(purgedTraceRawData,purgerData,pointsToMergeEachSide);
       PurgerAction action = new PurgerAction();
@@ -98,7 +98,7 @@ class TraceRawDataPurger{
     action.parameterName ="ErrorPercentage" ;
     if (data.points.length >  idealMaxPointNumber  ){
       purgerData.actions.add(action);
-      for (int i=1 ; i<= 3 ; i++ ){
+      for (int i=1 ; i<= 2 ; i++ ){
         purgedTraceRawData = _purgeAlignedPointsWithAllowedError(data,purgerData,ALIGNMENT_ALLOWED_ERROR_STEP*i) ;
         action.parameterValue =ALIGNMENT_ALLOWED_ERROR_STEP*i ;
         if (  purgedTraceRawData.points.length <=  idealMaxPointNumber ){
