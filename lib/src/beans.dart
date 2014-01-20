@@ -2,6 +2,11 @@ part of gps_trace;
 
 class TraceRawData{
   List<TracePoint> points = new List<TracePoint>();
+  
+  TraceRawData clone(){
+    TraceRawData clone = new TraceRawData();
+    this.points.forEach( (point) => clone.points.add(point.clone()   ));
+  }
 }
 
 class TracePoint{
@@ -19,6 +24,17 @@ class TracePoint{
   String toString(){
     return latitude.toString() +"/"+longitude.toString() + " e:"+elevetion.toString()+"m d:"+ distance.toString()+"km";
   }
+  
+  TracePoint clone(){
+    TracePoint clone = new TracePoint();
+    clone.index = this.index;
+    clone.latitude = this.latitude;
+    clone.longitude = this.longitude ;
+    clone.elevetion = this.elevetion ;
+    clone.distance = this.distance ;
+    return clone;
+  }
+  
   
 }
 

@@ -14,7 +14,7 @@ class TraceRawDataPurger{
   PurgerResult purge(TraceRawData input){
     
     TraceRawData purgedTraceRawData = input;
-    PurgerData purgerData = _analyse(input);
+    PurgerData purgerData = analyse(input);
     
     purgedTraceRawData = _purgeAlignedPoints(purgedTraceRawData,purgerData) ;
     purgedTraceRawData = _applySmoothing(purgedTraceRawData,purgerData) ;
@@ -63,7 +63,7 @@ class TraceRawDataPurger{
     TraceRawData purgedTraceRawData = data ;
     int pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate() - 4 ;
     if (pointsToMergeEachSide>0){
-      purgedTraceRawData = _applyElevetionAverageWithMergeWidth(purgedTraceRawData,purgerData,pointsToMergeEachSide);
+      purgedTraceRawData = applyElevetionAverageWithMergeWidth(purgedTraceRawData,purgerData,pointsToMergeEachSide);
       PurgerAction action = new PurgerAction();
       action.action= "ApplyElevetionAverage" ;
       action.parameterName ="ElevationMergedFromXPoints" ;
@@ -73,7 +73,7 @@ class TraceRawDataPurger{
     return purgedTraceRawData;
   }
   
-  TraceRawData _applyElevetionAverageWithMergeWidth(TraceRawData data, PurgerData purgerData, int pointsToMergeEachSide){
+  TraceRawData applyElevetionAverageWithMergeWidth(TraceRawData data, PurgerData purgerData, int pointsToMergeEachSide){
     
     for(int i = pointsToMergeEachSide ; i < data.points.length - pointsToMergeEachSide -1 ; i++  ){
       TracePoint currentPoint = data.points.elementAt(i);
@@ -151,7 +151,7 @@ class TraceRawDataPurger{
   }
   
   
-  PurgerData _analyse(TraceRawData data){
+  PurgerData analyse(TraceRawData data){
     StreamController pointStream = new StreamController.broadcast( sync: true);
     PointDensityComputer pointDensityComputer = new PointDensityComputer(pointStream.stream);
     LengthComputer lengthComputer = new LengthComputer(pointStream.stream);

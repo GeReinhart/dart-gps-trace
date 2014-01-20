@@ -12,4 +12,5 @@ part "src/beans.dart" ;
 part "src/computers.dart" ;
 part "src/parsers.dart" ;
 part "src/purgers.dart" ;
+part "src/profilers.dart" ;
 part "src/trace.dart" ;

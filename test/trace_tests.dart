@@ -55,6 +55,18 @@ main() {
      // expect(trace.up, equals(1031));
       expect(trace.down, equals(1591));
     });
+    
+    file = new File("test/resources/la-boussole-foullee_de_crossey.gpx");
+    TraceAnalysis.fromGpxFile(file).then((trace){
+      
+      num foulleeDifficulty = trace.difficulty ;
+      
+      file = new File("test/resources/la-boussole-la_saintelyon.gpx");
+      TraceAnalysis.fromGpxFile(file).then((trace){
+        num sainteLyonDifficulty = trace.difficulty ;
+        expect ( foulleeDifficulty*2 , lessThan(sainteLyonDifficulty  ) ) ;
+      });
+    });
   });
  
  

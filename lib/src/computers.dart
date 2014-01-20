@@ -238,46 +238,45 @@ class DownComputer{
   get down => _down.round();
 }
 
+class AvgElevetionComputer{
+  
+  num _elevetionSum = 0 ;
+  num _pointsNumber=0 ;
+      
+  AvgElevetionComputer(Stream stream){
+    stream.listen((point) => _compute(point as TracePoint)) ;
+  }
+  
+  void _compute(TracePoint point){
+    _elevetionSum +=  point.elevetion  ;  
+    _pointsNumber++;
+  }
+  
+  get avgElevetion => _pointsNumber==0?0:   (_elevetionSum/_pointsNumber).round() ;
+}
+
 class DifficultyComputer{
   
   DistanceComputer distanceComputer = new DistanceComputer();
-  InclinationComputer inclinationComputer = new InclinationComputer();
+  UpComputer upComputer ;
+  DownComputer downComputer ;
+  LengthComputer lengthComputer;
+  AvgElevetionComputer avgElevetionComputer;
   
-  TracePoint _previousPoint ;
-  
-  List<DistanceInclinationElevetion> _distancesByInclination = new List<DistanceInclinationElevetion> ();
-  Map<String,DistanceInclinationElevetion> _distancesByInclinationMap = new Map<String,DistanceInclinationElevetion>();
-
   num _difficulty = 0;
   
   DifficultyComputer(Stream stream){
-    stream.listen((point) => _computePoint(point as TracePoint),
-             onDone: () => _computeDifficulty()  ) ;
+    upComputer= new UpComputer(stream);
+    downComputer= new DownComputer(stream);
+    lengthComputer = new LengthComputer(stream);
+    avgElevetionComputer = new AvgElevetionComputer(stream);
   }
   
-  void _computePoint(TracePoint point){
-    if(point==null){
-      return;
-    }    
-    if(  _previousPoint != null ){
-      num distance = distanceComputer.distance(_previousPoint, point);
-      num elevationDiff= point.elevetion - _previousPoint.elevetion   ;
-      int inclination = inclinationComputer.inclination(elevationDiff, distance);
-      
-      if (  !_distancesByInclinationMap.containsKey(inclination.toString()) ){
-        _distancesByInclinationMap[inclination.toString()] =  new DistanceInclinationElevetion(inclination.toDouble(),distance,point.elevetion);
-      }else{
-        _distancesByInclinationMap[inclination.toString()].incDistance(distance) ; 
-      }
-      
-    }
-    _previousPoint = point ;
-  }
   
-  static const double FLAT_INCLINATION_WEIGHT = 1/1000 ;
-  static const double DOWN_INCLINATION_WEIGHT = 1/1000 / 5 * 1 ; 
-  static const double UP_INCLINATION_WEIGHT   = 1/1000 / 5 * 3 ;
-  static const double ELEVETION_THRESHOLD = 2000.0;
+  static const double ONE_KILOMETER_LENGTH_FACTOR = 1.00  ;
+  static const double ONE_HUNDRED_UP_FACTOR       = 0.75  ; 
+  static const double ONE_HUNDRED_DOWN_FACTOR     = 0.25 ;
+  static const double ELEVETION_THRESHOLD = 1500.0;
   
   void _computeDifficulty(){
     
@@ -285,37 +284,22 @@ class DifficultyComputer{
       return;
     }
     
-    for (int i = -100; i <= 100; i++) {
-      if (_distancesByInclinationMap.containsKey(i.toString())){
-        _distancesByInclination.add(_distancesByInclinationMap[i.toString()]);
-      }
-    }
-    
-    double currentDifficulty = 0.toDouble();
-    for (DistanceInclinationElevetion di in _distancesByInclination) {
-      
-      double loopDifficulty = 0.toDouble();
-      if ( di.inclination >=  -2 &&  di.inclination <=  2 ){
-        loopDifficulty = di.distance * FLAT_INCLINATION_WEIGHT ;
-      }else if ( di.inclination < 0 ){
-        loopDifficulty = (di.distance * FLAT_INCLINATION_WEIGHT) +  ( di.distance *  (-di.inclination) * DOWN_INCLINATION_WEIGHT ) ;
-      }else{
-        loopDifficulty = (di.distance * FLAT_INCLINATION_WEIGHT) +  ( di.distance *  di.inclination * UP_INCLINATION_WEIGHT ) ;
-      }
-      
-      double elevetionFactor = 1.0 ;
-      if (di.elevetion > ELEVETION_THRESHOLD){
-        elevetionFactor = di.elevetion / ELEVETION_THRESHOLD ; 
-      }
-      currentDifficulty += (loopDifficulty * elevetionFactor) ;
-    }
-    _difficulty = currentDifficulty.round() ;
-    
+    num length            = lengthComputer.length ;
+    num currentDifficulty = length / 1000 *  ONE_KILOMETER_LENGTH_FACTOR;
+    currentDifficulty     += upComputer.up / 100 * ONE_HUNDRED_UP_FACTOR ;
+    currentDifficulty     += downComputer.down / 100 * ONE_HUNDRED_DOWN_FACTOR;
+
+    double elevetionFactor = 1.0 ;
+    num avgElevetion = avgElevetionComputer.avgElevetion ;
+    if (avgElevetion > ELEVETION_THRESHOLD){
+        elevetionFactor = (avgElevetion / ELEVETION_THRESHOLD) ;
+     }
+    _difficulty = (currentDifficulty * elevetionFactor).round() ;
   }
   
   num get difficulty { 
     _computeDifficulty();
-    return _difficulty.round();
+    return _difficulty;
   }
   
 }
