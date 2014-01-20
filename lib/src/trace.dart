@@ -48,6 +48,12 @@ class TraceAnalysis {
   }
   
   
+  TraceRawData computeProfile(){
+    TraceRawDataProfiler profiler = new TraceRawDataProfiler();
+    TraceRawData data = new TraceRawData.fromPoints(points);
+    return profiler.profile(data) ;
+  }
+  
   static Future<TraceAnalysis> fromGpxFile(File gpxFile){
     return gpxFile.readAsString().then((content) => new TraceAnalysis.fromGpxFileContent(content));
   }

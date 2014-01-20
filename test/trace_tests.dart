@@ -148,7 +148,31 @@ main() {
     checkTrace("test/resources/openrunner.com.2863888.gpx", 10403, 136142) ;
   });
 
+  void checkProfile(String filePath ){
+    
+    File file = new File(filePath);
+    TraceAnalysis.fromGpxFile(file).then((originalTrace){
+      
+      print("=============: ${filePath}");
+      
+      num originalLength = originalTrace.length ;
+
+      print("originalTrace.points.length: ${originalTrace.points.length} ");
+      
+      TraceRawData dataProfile = originalTrace.computeProfile() ;
+      
+      expect ( dataProfile.points.length , lessThan( 600) ) ;
+      
+      print("dataProfile.points.length: ${dataProfile.points.length} ");
+      
+    });
+    
+  }  
   
+  
+  test('Profiler', () {
+    checkProfile("test/resources/openrunner.com.2310762.gpx") ;
+  });
   
   
   

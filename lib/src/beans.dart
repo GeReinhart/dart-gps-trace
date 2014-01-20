@@ -3,9 +3,14 @@ part of gps_trace;
 class TraceRawData{
   List<TracePoint> points = new List<TracePoint>();
   
+  TraceRawData();
+
+  TraceRawData.fromPoints( this.points  );
+  
   TraceRawData clone(){
     TraceRawData clone = new TraceRawData();
     this.points.forEach( (point) => clone.points.add(point.clone()   ));
+    return clone;
   }
 }
 

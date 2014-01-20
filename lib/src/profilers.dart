@@ -5,7 +5,7 @@ class TraceRawDataProfiler{
   
   num _minProfilePointsNumber ;
   
-  TraceRawDataProfiler({minProfilePointsNumber:256}){
+  TraceRawDataProfiler({minProfilePointsNumber:500}){
     this._minProfilePointsNumber = minProfilePointsNumber ;
   }
   
