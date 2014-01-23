@@ -10,10 +10,10 @@ class TraceAnalysis {
   TracePoint _upperPoint = null ;
   TracePoint _lowerPoint = null ;
   
-  num _distanceUp = 0 ; // in meters  > 2% inclination
+  num _lengthUp = 0 ; // in meters  
   num _upRelatedToDistanceUp = 0 ; // in meters 
-  num _distanceFlat = 0 ; // in meters
-  num _distanceDown = 0 ; // in meters < 2% inclination
+  num _lengthFlat = 0 ; // in meters
+  num _lengthDown = 0 ; // in meters 
   num _downRelatedToDistanceDown =0 ; // in meters 
   
   num _inclinationUp = 0;
@@ -74,7 +74,6 @@ class TraceAnalysis {
     UpperPointComputer upperPointComputer = new UpperPointComputer(pointStream.stream);
     LowerPointComputer lowerPointComputer = new LowerPointComputer(pointStream.stream);    
     LengthComputer lengthComputer = new LengthComputer(pointStream.stream);
-    LengthUpFlatDownComputer lengthUpFlatDownComputer = new LengthUpFlatDownComputer(pointStream.stream);
     UpComputer upComputer = new UpComputer(pointStream.stream);
     DownComputer downComputer = new DownComputer(pointStream.stream);
     DifficultyComputer difficultyComputer = new DifficultyComputer(pointStream.stream);
@@ -90,11 +89,11 @@ class TraceAnalysis {
     this._upperPoint = upperPointComputer.upperPoint ;  
     this._lowerPoint = lowerPointComputer.lowerPoint ;
     this._length = lengthComputer.length;
-    this._distanceUp = lengthUpFlatDownComputer.lengthUp ;
-    this._distanceDown = lengthUpFlatDownComputer.lengthDown ;
-    this._distanceFlat = lengthUpFlatDownComputer.lengthFlat ;  
-    this._inclinationUp = lengthUpFlatDownComputer.inclinationUp;
-    this._inclinationDown = lengthUpFlatDownComputer.inclinationDown;
+    this._lengthUp = upComputer.lengthUp ;
+    this._lengthDown = downComputer.lengthDown ;
+    this._lengthFlat = ( this._length - _lengthUp - _lengthDown).toInt() ;  
+    this._inclinationUp = upComputer.inclinationUp;
+    this._inclinationDown = downComputer.inclinationDown;
     this._up = upComputer.up;
     this._down = downComputer.down;
     this._difficulty = difficultyComputer.difficulty;
@@ -119,11 +118,11 @@ class TraceAnalysis {
   
   num get up => _up ;
 
-  num get distanceUp =>   _distanceUp ;
+  num get lengthUp =>   _lengthUp ;
   
-  num get distanceFlat => _distanceFlat ;
+  num get lengthFlat => _lengthFlat ;
   
-  num get distanceDown => _distanceDown ;
+  num get lengthDown => _lengthDown ;
   
   num get inclinationUp => _inclinationUp ;
   

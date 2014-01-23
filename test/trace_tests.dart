@@ -24,36 +24,21 @@ main() {
       expect(trace.startPoint.longitude, equals(5.719580050));    
       expect(trace.startPoint.elevetion, equals(238));
       
-      expect(trace.difficulty, equals(8));
-      expect(trace.length, equals(8224));
-      expect(trace.up, equals(0));
-      expect(trace.down, equals(35));
-      expect(trace.distanceUp, equals(0));
-      expect(trace.distanceFlat, equals(8176));
-      expect(trace.distanceDown, equals(49));
-      expect(trace.inclinationUp, equals(0));
-      expect(trace.inclinationDown, equals(3));
     });
     
-    file = new File("test/resources/12590_with_errors.gpx");
-    TraceAnalysis.fromGpxFile(file).then((trace){
-      expect(trace.length, equals(8224));   
-      expect(trace.up, equals(0));
-      expect(trace.down, equals(509));
-    });
-    
+   
     file = new File("test/resources/16231.gpx");
     TraceAnalysis.fromGpxFile(file).then((trace){
       expect(trace.length, equals(35855));   
-     // expect(trace.up, equals(1316));
-      expect(trace.down, equals(1316));
+      expect(trace.up, equals(1030));
+      expect(trace.down, equals(1039));
     });
 
     file = new File("test/resources/12645.gpx");
     TraceAnalysis.fromGpxFile(file).then((trace){
       expect(trace.length, equals(21966));   
-     // expect(trace.up, equals(1031));
-      expect(trace.down, equals(1591));
+      expect(trace.up, equals(629));
+      expect(trace.down, equals(1123));
     });
     
     file = new File("test/resources/la-boussole-foullee_de_crossey.gpx");
@@ -98,8 +83,10 @@ main() {
       print("originalTrace.pointDensity: ${originalTrace.pointDensity}");
       print("originalTrace.points.length: ${originalTrace.points.length}");
       print("originalTrace.up: ${originalTrace.up} (expected ${expectedUp})");
+      print("originalTrace.down: ${originalTrace.down}");
       print("originalTrace.upperPoint.elevetion: ${originalTrace.upperPoint.elevetion}");
       print("originalTrace.lowerPoint.elevetion: ${originalTrace.lowerPoint.elevetion}");
+      print("originalTrace.inclinationUp: ${originalTrace.inclinationUp}");
       
       TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger(3500) ;
       
@@ -117,8 +104,10 @@ main() {
       print("purgeTrace.pointDensity: ${purgeTrace.pointDensity}");
       print("purgeTrace.points.length: ${purgeTrace.points.length}");
       print("purgeTrace.up: ${purgeTrace.up} (expected ${expectedUp})");
+      print("purgeTrace.down: ${purgeTrace.down}");
       print("purgeTrace.upperPoint.elevetion: ${purgeTrace.upperPoint.elevetion}");
       print("purgeTrace.lowerPoint.elevetion: ${purgeTrace.lowerPoint.elevetion}");
+      print("purgeTrace.inclinationUp: ${purgeTrace.inclinationUp}");
       
       num errorPercentage = 1.5 / 100 ;
       expect ( purgeTrace.length , greaterThan( expectedLength * (1-errorPercentage)  ) ) ;

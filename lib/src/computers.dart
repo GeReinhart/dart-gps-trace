@@ -93,78 +93,18 @@ class PointDensityComputer{
   get pointDensity => _pointNumber == 0 ? 0 : _pointNumber / _distanceComputer.length * 1000;  
 }
 
-
-class LengthUpFlatDownComputer{
+class UpComputer{
   
   DistanceComputer distanceComputer = new DistanceComputer();
   InclinationComputer inclinationComputer = new InclinationComputer();
-  
-  TracePoint _previousPoint ;
-  num _lengthUp = 0 ;
-  num _lengthDown = 0 ;
-  num _lengthFlat = 0 ;
-  
-  num _upRelatedToLengthUp = 0;
-  num _downRelatedToLengthDown = 0;
-  
-  LengthUpFlatDownComputer(Stream stream){
-    stream.listen((point) => _compute(point as TracePoint)) ;
-  }
-  
-  void _compute(TracePoint point){
-    if(point==null){
-      return;
-    }    
-    if(  _previousPoint != null ){
-      num distance = distanceComputer.distance(_previousPoint, point);
-      num elevationDiff= point.elevetion - _previousPoint.elevetion   ;
-      int inclination = inclinationComputer.inclination(elevationDiff, distance);
-      
-      if( inclination > 2 ){
-        _lengthUp += distance ;
-        _upRelatedToLengthUp += elevationDiff ;
-      }else if (inclination < -2 ){
-        _lengthDown += distance ;
-        _downRelatedToLengthDown -= elevationDiff ;
-      }else{
-        _lengthFlat += distance ;
-      }
-    }
-    _previousPoint = point ;
-  }
-  
-  num get lengthUp => _lengthUp.round();
-  num get lengthDown => _lengthDown.round();
-  num get lengthFlat => _lengthFlat.round();
-  num get upRelatedToLengthUp => _upRelatedToLengthUp.round();
-  num get downRelatedToLengthDown => _downRelatedToLengthDown.round();
-  
-  num get inclinationUp {
-    if(_lengthUp == 0){
-      return 0;
-    }    
-   return inclinationComputer.inclination(_upRelatedToLengthUp,_lengthUp) ; 
-  }
-
-  num get inclinationDown {
-    if(_lengthDown == 0){
-      return 0;
-    }    
-   return inclinationComputer.inclination(_downRelatedToLengthDown,_lengthDown) ; 
-  }
-  
-} 
-
-class UpComputer{
-  
-  
-  DistanceComputer distanceComputer = new DistanceComputer();
   TracePoint _previousPoint ;
   num _elevetionThreshold ;
   num _minDistanceThreshold ;
   num _up = 0.0 ;
   TracePoint _lowBase ;
   TracePoint _upBase ;
+  num _lengthUp = 0 ;
+  
   
   UpComputer(Stream stream, {elevetionThreshold:60,minDistanceThreshold:200}){
     this._elevetionThreshold = elevetionThreshold;
@@ -202,6 +142,7 @@ class UpComputer{
                  _up += _upBase.elevetion - _lowBase.elevetion ;
                  _lowBase = point ;
                  _upBase = point;
+                 _lengthUp += distanceLowUp;
                 }
              }
           }
@@ -210,16 +151,31 @@ class UpComputer{
     _previousPoint = point ;
   }
   
-  get up => _up.round();
+  int get up => _up.round();
+  int get lengthUp => _lengthUp.round();
+  num get inclinationUp {
+    if(_lengthUp == 0){
+      return 0;
+    }    
+   return inclinationComputer.inclination(_up,_lengthUp) ; 
+  }  
 }
 
 class DownComputer{
   
   DistanceComputer distanceComputer = new DistanceComputer();
+  InclinationComputer inclinationComputer = new InclinationComputer();  
   TracePoint _previousPoint ;
-  num _down = 0 ;
+  num _elevetionThreshold ;
+  num _minDistanceThreshold ;
+  num _down = 0.0 ;
+  TracePoint _lowBase ;
+  TracePoint _upBase ;
+  num _lengthDown = 0 ;
   
-  DownComputer(Stream stream){
+  DownComputer(Stream stream, {elevetionThreshold:60,minDistanceThreshold:200}){
+    this._elevetionThreshold = elevetionThreshold;
+    this._minDistanceThreshold = minDistanceThreshold;
     stream.listen((point) => _compute(point as TracePoint)) ;
   }
   
@@ -227,15 +183,50 @@ class DownComputer{
     if(point==null){
       return;
     }    
-    if(  _previousPoint != null ){
-      if (  _previousPoint.elevetion  > point.elevetion  ){
-        _down += - point.elevetion + _previousPoint.elevetion ;  
-      }
+    if(point.elevetion==null){
+      return;
+    }  
+    if(  _previousPoint == null ){
+      _lowBase = point;
+      _upBase = point ;
+    }else{
+      
+      if ( _upBase.elevetion < point.elevetion  ){
+          // higer than the higher point
+          _lowBase = point ;
+          _upBase = point ;
+      }else{
+          // lower than the higher point 
+          if ( _lowBase.elevetion > point.elevetion ){
+             // lower than the lower point
+            _lowBase = point ;
+          }else{
+             // between lower and higher point
+             if ( _lowBase.elevetion + _elevetionThreshold  < point.elevetion){
+                // register the low
+                num distanceLowUp = distanceComputer.distance(_upBase,_lowBase).abs() ;
+                if( distanceLowUp > _minDistanceThreshold  ){
+                 _down += _upBase.elevetion - _lowBase.elevetion ;
+                 _lowBase = point ;
+                 _upBase = point;
+                 
+                 _lengthDown += distanceLowUp;
+                }
+             }
+          }
+       }
     }
     _previousPoint = point ;
   }
   
-  get down => _down.round();
+  int get down => _down.round();
+  int get lengthDown => _lengthDown.round();  
+  num get inclinationDown {
+    if(_lengthDown == 0){
+      return 0;
+    }    
+   return inclinationComputer.inclination(_down,_lengthDown) ;  
+  }
 }
 
 class AvgElevetionComputer{
