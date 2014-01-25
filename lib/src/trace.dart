@@ -48,8 +48,8 @@ class TraceAnalysis {
   }
   
   
-  TraceRawData computeProfile(){
-    TraceRawDataProfiler profiler = new TraceRawDataProfiler();
+  TraceRawData computeProfile({int maxProfilePointsNumber:500}){
+    TraceRawDataProfiler profiler = new TraceRawDataProfiler(maxProfilePointsNumber:maxProfilePointsNumber);
     TraceRawData data = new TraceRawData.fromPoints(points);
     return profiler.profile(data) ;
   }
@@ -89,17 +89,33 @@ class TraceAnalysis {
     this._upperPoint = upperPointComputer.upperPoint ;  
     this._lowerPoint = lowerPointComputer.lowerPoint ;
     this._length = lengthComputer.length;
-    this._lengthUp = upComputer.lengthUp ;
-    this._lengthDown = downComputer.lengthDown ;
     this._lengthFlat = ( this._length - _lengthUp - _lengthDown).toInt() ;  
-    this._inclinationUp = upComputer.inclinationUp;
-    this._inclinationDown = downComputer.inclinationDown;
     this._up = upComputer.up;
     this._down = downComputer.down;
     this._difficulty = difficultyComputer.difficulty;
     this._points = pointsComputer.points;
     this._importantPoints = importantPointsComputer.importantPoints;
     this._pointDensity = pointDensityComputer.pointDensity;
+    
+    int profilePointsNumber = rawData.points.length ~/ 20; 
+    if (profilePointsNumber < 100){
+      profilePointsNumber = 100;
+    }
+    TraceRawData profilePoints =  computeProfile( maxProfilePointsNumber:profilePointsNumber) ;
+    
+    pointStream = new StreamController.broadcast( sync: true);
+    LengthUpFlatDownComputer lengthUpFlatDownComputer = new LengthUpFlatDownComputer(pointStream.stream);
+    
+    for (var iter = rawData.points.iterator; iter.moveNext();) {
+      pointStream.add(iter.current) ;
+    }
+    pointStream.close();
+    
+    this._inclinationUp = lengthUpFlatDownComputer.inclinationUp;
+    this._inclinationDown = lengthUpFlatDownComputer.inclinationDown;
+    this._lengthUp = lengthUpFlatDownComputer.lengthUp ;
+    this._lengthDown = lengthUpFlatDownComputer.lengthDown ;
+    
   }
     
   List<TracePoint> get points => _points;
