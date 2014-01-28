@@ -71,11 +71,11 @@ main() {
     print("inclinationUp: ${trace.inclinationUp}");
   }
   
-  void checkUpAndLengthComputing(String filePath, SmoothingParameters smootingParameters, num expectedUp, num expectedLength ){
+  void checkUpAndLengthComputing(String filePath, SmoothingParameters smoothingParameters, num expectedUp, num expectedLength ){
     
     File file = new File(filePath);
     traceAnalyser.buildTraceAnalysisFromGpxFile(file,  applyPurge: true,
-         idealMaxPointNumber:3500, smootingParameters:smootingParameters
+         idealMaxPointNumber:3500, smoothingParameters:smoothingParameters
                ).then((trace){
       
     
@@ -130,21 +130,21 @@ main() {
   });
   
   void checkSmoothingDoNotChangeData(File file){
-      traceAnalyser.buildTraceAnalysisFromGpxFile(file, applyPurge: true,smootingParameters:no).then((noSmoothingTrace){
+      traceAnalyser.buildTraceAnalysisFromGpxFile(file, applyPurge: true,smoothingParameters:no).then((noSmoothingTrace){
       
       print("==== Check smoothing do not change data =========: ${file}");
       print("noSmoothingUp: ${noSmoothingTrace.up} ");
       TraceRawData data = noSmoothingTrace.rawData;
       
-      TraceAnalysis lowSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:low);
+      TraceAnalysis lowSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smoothingParameters:low);
       print("lowSmoothingUp: ${lowSmoothingTrace.up} ");
-      TraceAnalysis mediumSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:medium);
+      TraceAnalysis mediumSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smoothingParameters:medium);
       print("mediumSmoothingUp: ${mediumSmoothingTrace.up} ");
-      TraceAnalysis highSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:high);
+      TraceAnalysis highSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smoothingParameters:high);
       print("highSmoothingUp: ${highSmoothingTrace.up} ");
-      TraceAnalysis noSmoothingTrace2 = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:no);
+      TraceAnalysis noSmoothingTrace2 = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smoothingParameters:no);
       print("noSmoothingUp2: ${noSmoothingTrace2.up} ");
-      TraceAnalysis highSmoothingTrace2 = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:high);
+      TraceAnalysis highSmoothingTrace2 = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smoothingParameters:high);
       print("highSmoothingUp2: ${highSmoothingTrace2.up} ");
       
       expect ( noSmoothingTrace.up , equals( noSmoothingTrace2.up) ) ;

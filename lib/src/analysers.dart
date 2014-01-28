@@ -6,7 +6,7 @@ class TraceAnalyser{
   TraceRawDataProfiler _profiler ;
   TraceRawDataPurger _traceRawDataPurger  ;
   
-  TraceAnalyser( {int maxProfilePointsNumber:500} ){
+  TraceAnalyser(){
     _gpxFileParser = new GpxFileParser();
     _profiler = new TraceRawDataProfiler();
     _traceRawDataPurger = new TraceRawDataPurger() ;
@@ -15,7 +15,7 @@ class TraceAnalyser{
   Future<TraceAnalysis> buildTraceAnalysisFromGpxFile(File gpxFile,
         {bool applyPurge: false,
          int idealMaxPointNumber:3500, 
-         SmoothingParameters smootingParameters:null}
+         SmoothingParameters smoothingParameters:null}
               ){
     return gpxFile.readAsString().then((gpxFileContent) { 
         TraceRawData rawData = _gpxFileParser.parseFromContentFile(gpxFileContent) ;
@@ -23,7 +23,7 @@ class TraceAnalyser{
         return buildTraceAnalysisFromRawData(rawData,
                                           applyPurge: applyPurge,
                                           idealMaxPointNumber:idealMaxPointNumber, 
-                                          smootingParameters:smootingParameters) ;
+                                          smoothingParameters:smoothingParameters) ;
       }
     );
   }
@@ -31,17 +31,17 @@ class TraceAnalyser{
   TraceAnalysis buildTraceAnalysisFromRawData(TraceRawData rawData,
         {bool applyPurge: false,
          int idealMaxPointNumber:3500, 
-         SmoothingParameters smootingParameters:null}
+         SmoothingParameters smoothingParameters:null}
               ){
         
         if (applyPurge){
           _traceRawDataPurger.deleteAlignedPoints( rawData, idealMaxPointNumber);
         }
-        if (smootingParameters != null && smootingParameters.applySmooting){
+        if (smoothingParameters != null && smoothingParameters.applySmooting){
           
           PurgerResult smoothData = _traceRawDataPurger.applySmoothingWithElevetionAverage(rawData, cloneData: true,
-                                             pointsToMergeEachSide: (smootingParameters.numberOfMergedPoints-1) ~/ 2,
-                                             maxDistanceWithinMergedPoints: smootingParameters.maxDistanceBetweenMergedPoints ) ;
+                                             pointsToMergeEachSide: (smoothingParameters.numberOfMergedPoints-1) ~/ 2,
+                                             maxDistanceWithinMergedPoints: smoothingParameters.maxDistanceBetweenMergedPoints ) ;
           
           TraceAnalysis smoothTraceAnalysis = new TraceAnalysis.fromRawData(smoothData.rawData) ;
           
