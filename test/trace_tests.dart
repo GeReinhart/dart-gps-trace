@@ -12,6 +12,11 @@ main() {
   SmoothingParameters low = SmoothingParameters.get( SmoothingLevel.LOW );
   SmoothingParameters no = SmoothingParameters.get( SmoothingLevel.NO );
 
+  test('Get smooting by String', (){
+    SmoothingParameters mediumParameter = SmoothingParameters.get( SmoothingLevel.fromString("medium" ));
+    expect(medium, equals(mediumParameter));
+  });
+  
   test('Calculate distance between 2 points', () {
     TracePoint start =new TracePoint.basic(45.140394900,5.719580050);
     TracePoint end =new TracePoint.basic(45.190577800,5.726594030);

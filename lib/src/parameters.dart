@@ -14,10 +14,10 @@ class SmoothingLevel{
 
   String toString(){
     switch (value) {
-      case SmoothingLevel.NO    : return "no" ;
-      case SmoothingLevel.LOW   : return "low" ;
-      case SmoothingLevel.MEDIUM: return "medium" ;
-      case SmoothingLevel.HIGH  : return "high" ;
+      case 0 : return "no" ;
+      case 1 : return "low" ;
+      case 2 : return "medium" ;
+      case 3 : return "high" ;
     }
     return "no";
   }
