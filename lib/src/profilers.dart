@@ -3,21 +3,21 @@ part of gps_trace;
 
 class TraceRawDataProfiler{
   
-  int _maxProfilePointsNumber ;
+  TraceRawDataPurger _purger ;
   
-  TraceRawDataProfiler({int maxProfilePointsNumber:500}){
-    this._maxProfilePointsNumber = maxProfilePointsNumber ;
+  TraceRawDataProfiler(){
+    _purger = new TraceRawDataPurger();
   }
   
-  TraceRawData profile(TraceRawData data){
+  TraceRawData profile(TraceRawData data, {int maxProfilePointsNumber:500}){
     
     TraceRawData clonedData = data.clone();
-    if ( clonedData.points.length < _maxProfilePointsNumber * 1.5 ){
+    if ( clonedData.points.length < maxProfilePointsNumber * 1.5 ){
       return clonedData;
     }
-    _applyElevetionAverage(clonedData) ;
+    _applyElevetionAverage(clonedData,maxProfilePointsNumber) ;
     
-    int sliceSize = (clonedData.points.length / _maxProfilePointsNumber * 3).truncate() ;
+    int sliceSize = (clonedData.points.length / maxProfilePointsNumber * 3).truncate() ;
     
     TraceRawData profileData = new TraceRawData() ;
     TracePoint lowerPoint = data.points.elementAt(0);
@@ -57,11 +57,11 @@ class TraceRawDataProfiler{
     return profileData;
   }
 
-  TraceRawData _applyElevetionAverage(TraceRawData profileData){
-    TraceRawDataPurger purger = new TraceRawDataPurger( _maxProfilePointsNumber * 2);
-    PurgerData  purgerData =  purger._analyse(profileData) ;
+  TraceRawData _applyElevetionAverage(TraceRawData profileData, int maxProfilePointsNumber){
+
+    PurgerData  purgerData =  _purger._analyse(profileData) ;
     int pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate();
-    purger.applySmoothingWithElevetionAverage(profileData, purgerData:purgerData, pointsToMergeEachSide: pointsToMergeEachSide);
+    _purger.applySmoothingWithElevetionAverage(profileData, purgerData:purgerData, pointsToMergeEachSide: pointsToMergeEachSide);
   }
   
 }

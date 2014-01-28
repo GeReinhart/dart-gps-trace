@@ -27,46 +27,31 @@ class TraceAnalysis {
   
   TraceAnalysis();
 
-  TraceAnalysis.fromPoints( TraceRawData rawData){
+  TraceAnalysis.fromTraceAnalysis( TraceAnalysis traceAnalysis,TraceRawData rawData){
+    _points = rawData.points ;
+    _pointDensity = traceAnalysis.pointDensity;
+    _importantPoints = traceAnalysis.importantPoints;
+    _upperPoint = traceAnalysis.upperPoint ;
+    _lowerPoint = traceAnalysis.lowerPoint ;
+    
+    _lengthUp = traceAnalysis.lengthUp ;   
+    _lengthFlat =  traceAnalysis.lengthFlat ;
+    _lengthDown = traceAnalysis.lengthDown ;  
+    
+    _inclinationUp = traceAnalysis.inclinationUp;
+    _inclinationDown = traceAnalysis.inclinationDown;
+    
+    _length = traceAnalysis.length; 
+    _down = traceAnalysis.down ; 
+    _up = traceAnalysis.up ; 
+    
+    _difficulty = traceAnalysis.difficulty;
+  }
+  
+  TraceAnalysis.fromRawData( TraceRawData rawData){
     _loadFromRawData( rawData );
   }
-  
-  TraceAnalysis.fromGpxFileContent(String gpxFileContent){
-    _loadFromContent( gpxFileContent );
-  }
-  
-  TraceAnalysis computeNewPurgedTraceAnalysis({idealMaxPointNumber:3500, bool log: false}){
-    
-    TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger(idealMaxPointNumber) ;
-    PurgerResult purgedData = traceRawDataPurger.purge( this.rawData  ,cloneData:true);
-    
-    if(log){
-      purgedData.purgerData.actions.forEach( (action) => print( " done : " + action.toString())  ) ;
-    }
-    
-    return new TraceAnalysis.fromPoints(purgedData.rawData);
-  }
-  
-  
-  TraceRawData computeProfile({int maxProfilePointsNumber:500}){
-    TraceRawDataProfiler profiler = new TraceRawDataProfiler(maxProfilePointsNumber:maxProfilePointsNumber);
-    TraceRawData data = new TraceRawData.fromPoints(points);
-    return profiler.profile(data) ;
-  }
-  
-  static Future<TraceAnalysis> fromGpxFile(File gpxFile){
-    return gpxFile.readAsString().then((content) => new TraceAnalysis.fromGpxFileContent(content));
-  }
-  
-  
-  void  _loadFromContent( String gpxFileContent ){
-
-    GpxFileParser gpxFileParser = new GpxFileParser() ;
-    TraceRawData rawData = gpxFileParser.parseFromContentFile(gpxFileContent) ;
-    
-    _loadFromRawData( rawData  );
-  }
-  
+ 
   void  _loadFromRawData( TraceRawData rawData  ){
 
     StreamController pointStream = new StreamController.broadcast( sync: true);
@@ -97,12 +82,6 @@ class TraceAnalysis {
     this._importantPoints = importantPointsComputer.importantPoints;
     this._pointDensity = pointDensityComputer.pointDensity;
     
-    int profilePointsNumber = rawData.points.length ~/ 20; 
-    if (profilePointsNumber < 100){
-      profilePointsNumber = 100;
-    }
-    TraceRawData profilePoints =  computeProfile( maxProfilePointsNumber:profilePointsNumber) ;
-    
     pointStream = new StreamController.broadcast( sync: true);
     LengthUpFlatDownComputer lengthUpFlatDownComputer = new LengthUpFlatDownComputer(pointStream.stream);
     
@@ -119,6 +98,8 @@ class TraceAnalysis {
   }
     
   List<TracePoint> get points => _points;
+  
+  List<TracePoint> get importantPoints => _importantPoints;
   
   TraceRawData get rawData => new  TraceRawData.fromPoints( _points  ) ;
 

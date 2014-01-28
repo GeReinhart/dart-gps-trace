@@ -7,16 +7,14 @@ class TraceRawDataPurger{
   static const num SMOOTHING_DENSITY_THRESHOLD =  1000/30 ;
   static const num SMOOTHING_THRESHOLD =  10;
   
-  num idealMaxPointNumber;
+  TraceRawDataPurger();
   
-  TraceRawDataPurger(this.idealMaxPointNumber);
-  
-  PurgerResult purge(TraceRawData data, { bool cloneData: false }){
+  PurgerResult purge(TraceRawData data, int idealMaxPointNumber, { bool cloneData: false }){
     
     TraceRawData purgedTraceRawData =   cloneData ? data.clone() : data ;
     PurgerData purgerData = _analyse(data);
     
-    purgedTraceRawData = deleteAlignedPoints(purgedTraceRawData,purgerData:purgerData).rawData ;
+    purgedTraceRawData = deleteAlignedPoints(purgedTraceRawData,idealMaxPointNumber,purgerData:purgerData).rawData ;
     purgedTraceRawData = applySmoothingWithThreshold(purgedTraceRawData,purgerData:purgerData).rawData ;
     purgedTraceRawData = applySmoothingWithElevetionAverage(purgedTraceRawData,purgerData:purgerData).rawData ;
     
@@ -110,7 +108,7 @@ class TraceRawDataPurger{
     return data;
   }   
   
-  PurgerResult deleteAlignedPoints(TraceRawData data, { bool cloneData: false , PurgerData purgerData : null  }){
+  PurgerResult deleteAlignedPoints(TraceRawData data, int idealMaxPointNumber, { bool cloneData: false , PurgerData purgerData : null  }){
     PurgerResult result = _initPurgerResult(  data,  cloneData,  purgerData );
     
     PurgerAction action = new PurgerAction();

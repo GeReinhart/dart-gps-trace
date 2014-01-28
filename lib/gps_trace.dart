@@ -8,9 +8,11 @@ import 'dart:io';
 import 'dart:math' as Math ;
 import 'package:petitparser/xml.dart';
 
+part "src/analysers.dart" ;
 part "src/beans.dart" ;
 part "src/computers.dart" ;
+part "src/parameters.dart" ;
 part "src/parsers.dart" ;
-part "src/purgers.dart" ;
 part "src/profilers.dart" ;
+part "src/purgers.dart" ;
 part "src/trace.dart" ;

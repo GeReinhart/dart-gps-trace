@@ -6,6 +6,12 @@ import '../lib/gps_trace.dart';
 
 main() {
   
+  TraceAnalyser traceAnalyser = new TraceAnalyser();
+  SmoothingParameters high = SmoothingParameters.get( SmoothingLevel.HIGH );
+  SmoothingParameters medium = SmoothingParameters.get( SmoothingLevel.MEDIUM );
+  SmoothingParameters low = SmoothingParameters.get( SmoothingLevel.LOW );
+  SmoothingParameters no = SmoothingParameters.get( SmoothingLevel.NO );
+
   test('Calculate distance between 2 points', () {
     TracePoint start =new TracePoint.basic(45.140394900,5.719580050);
     TracePoint end =new TracePoint.basic(45.190577800,5.726594030);
@@ -16,7 +22,7 @@ main() {
   
  test('Analyse a gpx file', () {
     File file = new File("test/resources/openrunner.com.1255360.gpx"); // Chamchaude
-    TraceAnalysis.fromGpxFile(file).then((trace){
+    traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
       expect(trace.upperPoint.elevetion, equals(2041));
       expect(trace.lowerPoint.elevetion, equals(1321));
       expect(trace.points.length, equals(105));
@@ -40,12 +46,12 @@ main() {
  
  test('Check difficulty between a long flat trace and short trace with a bit of elevetion is still consistent', () {
    File file = new File("test/resources/la-boussole-foullee_de_crossey.gpx");
-   TraceAnalysis.fromGpxFile(file).then((trace){
+   traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
      
      num foulleeDifficulty = trace.difficulty ;
      
      file = new File("test/resources/la-boussole-la_saintelyon.gpx");
-     TraceAnalysis.fromGpxFile(file).then((trace){
+     traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
        num sainteLyonDifficulty = trace.difficulty ;
        expect ( foulleeDifficulty*2 , lessThan(sainteLyonDifficulty  ) ) ;
      });
@@ -65,62 +71,52 @@ main() {
     print("inclinationUp: ${trace.inclinationUp}");
   }
   
-  void checkUpAndLengthComputing(String filePath,  num expectedUp, num expectedLength ){
+  void checkUpAndLengthComputing(String filePath, SmoothingParameters smootingParameters, num expectedUp, num expectedLength ){
     
     File file = new File(filePath);
-    TraceAnalysis.fromGpxFile(file).then((originalTrace){
+    traceAnalyser.buildTraceAnalysisFromGpxFile(file,  applyPurge: true,
+         idealMaxPointNumber:3500, smootingParameters:smootingParameters
+               ).then((trace){
       
-      num originalDifficulty = originalTrace.difficulty ;
-      num originalDensity = originalTrace.pointDensity ;
-      num originalLength = originalTrace.length ;
-      num originalNumberOfPoints = originalTrace.points.length ;
-      num originalUp =  originalTrace.up;
-      TracePoint orignialUpperPoint =  originalTrace.upperPoint ;
-      List<TracePoint> orignalPoints = originalTrace.points;
-
-      
-      TraceAnalysis purgeTrace = originalTrace.computeNewPurgedTraceAnalysis(idealMaxPointNumber: 3500);
-      
+    
       print("=============: ${filePath}");
-      printTrace(purgeTrace) ;
+      printTrace(trace) ;
       
       num errorPercentage = 1.5 / 100 ;
-      expect ( purgeTrace.length , greaterThan( expectedLength * (1-errorPercentage)  ) ) ;
-      expect ( purgeTrace.length , lessThan( expectedLength * (1+errorPercentage)  ) ) ;
+      expect ( trace.length , greaterThan( expectedLength * (1-errorPercentage)  ) ) ;
+      expect ( trace.length , lessThan( expectedLength * (1+errorPercentage)  ) ) ;
       
       errorPercentage = 3 / 100 ;
-      expect ( purgeTrace.up , greaterThan( expectedUp * (1-errorPercentage)  ) ) ;
-      expect ( purgeTrace.up , lessThan( expectedUp * (1+errorPercentage)  ) ) ;
+      expect ( trace.up , greaterThan( expectedUp * (1-errorPercentage)  ) ) ;
+      expect ( trace.up , lessThan( expectedUp * (1+errorPercentage)  ) ) ;
       
       
     });
     
   }  
-   
   
   test('Check gpx file up and length computing values are consistent compared to other websites', () {
-    
     // http://www.openrunner.com/index.php?id=1255360 (chamchaude)
-    checkUpAndLengthComputing("test/resources/openrunner.com.1255360.gpx", 703, 7665) ;
+    checkUpAndLengthComputing("test/resources/openrunner.com.1255360.gpx",low, 703, 7665) ;
     // http://www.openrunner.com/index.php?id=2310762 (ut4m)
-    checkUpAndLengthComputing("test/resources/openrunner.com.2310762.gpx", 10115, 167832) ;
+    checkUpAndLengthComputing("test/resources/openrunner.com.2310762.gpx",high, 10315, 167832) ;
     // http://www.openrunner.com/index.php?id=3112821 (utmb)
-    checkUpAndLengthComputing("test/resources/openrunner.com.3112821.gpx", 8810, 165037) ;
+    checkUpAndLengthComputing("test/resources/openrunner.com.3112821.gpx",medium, 8810, 165037) ;
     // http://www.openrunner.com/index.php?id=2647279 (grands ducs)
-    checkUpAndLengthComputing("test/resources/openrunner.com.2647279.gpx", 4735, 76449) ;
+    checkUpAndLengthComputing("test/resources/openrunner.com.2647279.gpx",low, 4735, 76449) ;
     // http://www.openrunner.com/index.php?id=2863888 (echappee belle)
-    checkUpAndLengthComputing("test/resources/openrunner.com.2863888.gpx", 10403, 136142) ;
+    checkUpAndLengthComputing("test/resources/openrunner.com.2863888.gpx",low, 10403, 136142) ;
   });
 
   void checkProfile(String filePath ){
     
     File file = new File(filePath);
-    TraceAnalysis.fromGpxFile(file).then((originalTrace){
+    traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((originalTrace){
       
-      print("=============: ${filePath}");
+      print("==== Check profile =========: ${filePath}");
       num originalLength = originalTrace.length ;
       print("originalTrace.points.length: ${originalTrace.points.length} ");
-      TraceRawData dataProfile = originalTrace.computeProfile() ;
+      TraceRawData dataProfile =  traceAnalyser.buildProfile(originalTrace.rawData, maxProfilePointsNumber:500);
       expect ( dataProfile.points.length , lessThan( 600) ) ;
       print("dataProfile.points.length: ${dataProfile.points.length} ");
       
@@ -133,7 +129,33 @@ main() {
     checkProfile("test/resources/openrunner.com.2310762.gpx") ;
   });
   
+  void checkSmoothingDoNotChangeData(File file){
+      traceAnalyser.buildTraceAnalysisFromGpxFile(file, applyPurge: true,smootingParameters:no).then((noSmoothingTrace){
+      
+      print("==== Check smoothing do not change data =========: ${file}");
+      print("noSmoothingUp: ${noSmoothingTrace.up} ");
+      TraceRawData data = noSmoothingTrace.rawData;
+      
+      TraceAnalysis lowSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:low);
+      print("lowSmoothingUp: ${lowSmoothingTrace.up} ");
+      TraceAnalysis mediumSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:medium);
+      print("mediumSmoothingUp: ${mediumSmoothingTrace.up} ");
+      TraceAnalysis highSmoothingTrace = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:high);
+      print("highSmoothingUp: ${highSmoothingTrace.up} ");
+      TraceAnalysis noSmoothingTrace2 = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:no);
+      print("noSmoothingUp2: ${noSmoothingTrace2.up} ");
+      TraceAnalysis highSmoothingTrace2 = traceAnalyser.buildTraceAnalysisFromRawData(data, applyPurge: false,smootingParameters:high);
+      print("highSmoothingUp2: ${highSmoothingTrace2.up} ");
+      
+      expect ( noSmoothingTrace.up , equals( noSmoothingTrace2.up) ) ;
+      expect ( highSmoothingTrace.up , equals( highSmoothingTrace2.up) ) ;
+     });
+  }
   
+  test('Check smoothing do not change data', () {
+    checkSmoothingDoNotChangeData(new File("test/resources/la-boussole-ultra_ardechois.gpx")) ;
+    checkSmoothingDoNotChangeData(new File("test/resources/openrunner.com.2310762.gpx")) ;
+  });
   
   
 }
