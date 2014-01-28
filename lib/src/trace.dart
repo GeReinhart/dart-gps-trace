@@ -35,14 +35,14 @@ class TraceAnalysis {
     _loadFromContent( gpxFileContent );
   }
   
-  TraceAnalysis computeNewPurgedTraceAnalysis({idealMaxPointNumber:3500}){
+  TraceAnalysis computeNewPurgedTraceAnalysis({idealMaxPointNumber:3500, bool log: false}){
     
     TraceRawDataPurger traceRawDataPurger = new TraceRawDataPurger(idealMaxPointNumber) ;
+    PurgerResult purgedData = traceRawDataPurger.purge( this.rawData  ,cloneData:true);
     
-    TraceRawData data = new TraceRawData();
-    data.points = new List<TracePoint>();
-    data.points.addAll(_points);
-    PurgerResult purgedData = traceRawDataPurger.purge(data);
+    if(log){
+      purgedData.purgerData.actions.forEach( (action) => print( " done : " + action.toString())  ) ;
+    }
     
     return new TraceAnalysis.fromPoints(purgedData.rawData);
   }
@@ -119,6 +119,8 @@ class TraceAnalysis {
   }
     
   List<TracePoint> get points => _points;
+  
+  TraceRawData get rawData => new  TraceRawData.fromPoints( _points  ) ;
 
   void addPoint(TracePoint point) => _points.add(point) ;
   

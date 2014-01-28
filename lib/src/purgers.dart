@@ -11,34 +11,34 @@ class TraceRawDataPurger{
   
   TraceRawDataPurger(this.idealMaxPointNumber);
   
-  PurgerResult purge(TraceRawData input){
+  PurgerResult purge(TraceRawData data, { bool cloneData: false }){
     
-    TraceRawData purgedTraceRawData = input;
-    PurgerData purgerData = analyse(input);
+    TraceRawData purgedTraceRawData =   cloneData ? data.clone() : data ;
+    PurgerData purgerData = _analyse(data);
     
-    purgedTraceRawData = _purgeAlignedPoints(purgedTraceRawData,purgerData) ;
-    purgedTraceRawData = _applySmoothing(purgedTraceRawData,purgerData) ;
-    purgedTraceRawData = _applyElevetionAverage(purgedTraceRawData,purgerData) ;
+    purgedTraceRawData = deleteAlignedPoints(purgedTraceRawData,purgerData:purgerData).rawData ;
+    purgedTraceRawData = applySmoothingWithThreshold(purgedTraceRawData,purgerData:purgerData).rawData ;
+    purgedTraceRawData = applySmoothingWithElevetionAverage(purgedTraceRawData,purgerData:purgerData).rawData ;
     
     return new PurgerResult(purgedTraceRawData,purgerData);
   }
 
-  TraceRawData _applySmoothing(TraceRawData data, PurgerData purgerData){
-    TraceRawData purgedTraceRawData = data;
+  PurgerResult applySmoothingWithThreshold(TraceRawData data, { bool cloneData: false , PurgerData purgerData : null  }){
+      
+    PurgerResult result = _initPurgerResult(  data,  cloneData,  purgerData );
     
-    if ( purgerData.originalDensity > SMOOTHING_DENSITY_THRESHOLD ){
-      purgedTraceRawData = _applySmoothingWithThreshold(purgedTraceRawData,purgerData,SMOOTHING_THRESHOLD);
+    if ( result.purgerData.originalDensity > SMOOTHING_DENSITY_THRESHOLD ){
+      result.rawData = _applySmoothingWithThreshold(result.rawData,result.purgerData,SMOOTHING_THRESHOLD);
 
       PurgerAction action = new PurgerAction();
       action.action= "ApplyElevetionSmoothing" ;
       action.parameterName ="IgnoreElevetionThreshold" ;
       action.parameterValue =SMOOTHING_THRESHOLD;
-      purgerData.actions.add(action); 
+      result.addPurgerAction(action); 
     }
     
-    return purgedTraceRawData; 
+    return result; 
   }
-
   
   TraceRawData _applySmoothingWithThreshold(TraceRawData data, PurgerData purgerData, num smoothingThreshold){
     for(int i = 1 ; i < data.points.length - 1; i++  ){
@@ -59,22 +59,35 @@ class TraceRawDataPurger{
     return data;
   }
   
-  TraceRawData _applyElevetionAverage(TraceRawData data, PurgerData purgerData){
-    TraceRawData purgedTraceRawData = data ;
-    int pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate() - 4 ;
+  PurgerResult applySmoothingWithElevetionAverage(TraceRawData data,
+                                                  { bool cloneData: false,
+                                                   PurgerData purgerData : null,
+                                                   int pointsToMergeEachSide: null,
+                                                   int maxDistanceWithinMergedPoints: null}){
+    
+    PurgerResult result = _initPurgerResult(  data,  cloneData,  purgerData );
+  
+    if(  pointsToMergeEachSide == null ){
+       pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate() - 4 ;
+    }
+    if(  maxDistanceWithinMergedPoints == null ){
+      maxDistanceWithinMergedPoints = pointsToMergeEachSide * 35 ;
+    }    
+    
     if (pointsToMergeEachSide>0){
-      purgedTraceRawData = applyElevetionAverageWithMergeWidth(purgedTraceRawData,purgerData,pointsToMergeEachSide);
+      result.rawData = _applySmoothingWithElevetionAverage(result.rawData,result.purgerData,pointsToMergeEachSide,maxDistanceWithinMergedPoints);
       PurgerAction action = new PurgerAction();
       action.action= "ApplyElevetionAverage" ;
       action.parameterName ="ElevationMergedFromXPoints" ;
       action.parameterValue =pointsToMergeEachSide*2  +1 ;
-      purgerData.actions.add(action);      
+      result.addPurgerAction(action);      
     }
-    return purgedTraceRawData;
+    return result;
   }
   
-  TraceRawData applyElevetionAverageWithMergeWidth(TraceRawData data, PurgerData purgerData, int pointsToMergeEachSide){
+  TraceRawData _applySmoothingWithElevetionAverage(TraceRawData data, PurgerData purgerData, int pointsToMergeEachSide, int maxDistanceWithinMergedPoints){
     
+    DistanceComputer distanceComputer = new DistanceComputer();
     for(int i = pointsToMergeEachSide ; i < data.points.length - pointsToMergeEachSide -1 ; i++  ){
       TracePoint currentPoint = data.points.elementAt(i);
       
@@ -82,34 +95,41 @@ class TraceRawDataPurger{
         continue;
       }      
       
-      num elevetion= 0;
+      List<TracePoint> pointsToMerge = new List();
+      pointsToMerge.add(currentPoint);
       for ( int j = i-pointsToMergeEachSide ; j  <= i + pointsToMergeEachSide ; j++    ){
-        elevetion+=data.points.elementAt(j).elevetion;
+        TracePoint pointToMergeCandidate = data.points.elementAt(j);
+        if (distanceComputer.distance(currentPoint, pointToMergeCandidate) <=  maxDistanceWithinMergedPoints ){
+          pointsToMerge.add(pointToMergeCandidate);
+        }
       }
-      currentPoint.elevetion = elevetion / (pointsToMergeEachSide*2+1) ;
+      num elevetion= 0;
+      pointsToMerge.forEach(  (point) => elevetion += point.elevetion  ) ;
+      currentPoint.elevetion = elevetion / pointsToMerge.length ;
     }
     return data;
   }   
   
-  TraceRawData _purgeAlignedPoints(TraceRawData data,PurgerData purgerData){
-    TraceRawData purgedTraceRawData = data ;
+  PurgerResult deleteAlignedPoints(TraceRawData data, { bool cloneData: false , PurgerData purgerData : null  }){
+    PurgerResult result = _initPurgerResult(  data,  cloneData,  purgerData );
+    
     PurgerAction action = new PurgerAction();
     action.action= "PurgeAlignedPoints" ;
     action.parameterName ="ErrorPercentage" ;
-    if (data.points.length >  idealMaxPointNumber  ){
-      purgerData.actions.add(action);
+    if (result.rawDataSize >  idealMaxPointNumber  ){
+      result.addPurgerAction(action);
       for (int i=1 ; i<= 2 ; i++ ){
-        purgedTraceRawData = _purgeAlignedPointsWithAllowedError(data,purgerData,ALIGNMENT_ALLOWED_ERROR_STEP*i) ;
+        result.rawData = _deleteAlignedPoints(result.rawData,result.purgerData,ALIGNMENT_ALLOWED_ERROR_STEP*i) ;
         action.parameterValue =ALIGNMENT_ALLOWED_ERROR_STEP*i ;
-        if (  purgedTraceRawData.points.length <=  idealMaxPointNumber ){
-          return purgedTraceRawData;
+        if (  result.rawDataSize <=  idealMaxPointNumber ){
+          return result;
         }
       }
     }
-    return purgedTraceRawData; 
+    return result; 
   }
-  
-  TraceRawData _purgeAlignedPointsWithAllowedError(TraceRawData data,PurgerData purgerData, num alignmentAllowedError){
+   
+  TraceRawData _deleteAlignedPoints(TraceRawData data,PurgerData purgerData, num alignmentAllowedError){
     
     TraceRawData purgedRawData = new TraceRawData();
     List<TracePoint> points = new List<TracePoint>() ;
@@ -149,9 +169,8 @@ class TraceRawDataPurger{
     
     return purgedRawData;
   }
-  
-  
-  PurgerData analyse(TraceRawData data){
+    
+  PurgerData _analyse(TraceRawData data){
     StreamController pointStream = new StreamController.broadcast( sync: true);
     PointDensityComputer pointDensityComputer = new PointDensityComputer(pointStream.stream);
     LengthComputer lengthComputer = new LengthComputer(pointStream.stream);
@@ -169,6 +188,17 @@ class TraceRawDataPurger{
     return purgerData;
   }
 
+  PurgerResult _initPurgerResult( TraceRawData data, bool cloneData , PurgerData purgerData ){
+    if (purgerData == null){
+      purgerData = new PurgerData();
+    }
+    TraceRawData purgedTraceRawData = data ;
+    if (cloneData){
+      purgedTraceRawData = data.clone();
+    }
+    return  new PurgerResult(purgedTraceRawData,purgerData);
+  }
+  
   bool _isImportantPoint(PurgerData purgerData, TracePoint currentPoint) {
     return purgerData.importantPoints != null && purgerData.importantPoints.contains(currentPoint);
   }
@@ -182,6 +212,12 @@ class PurgerResult{
   PurgerData purgerData;
   
   PurgerResult(this.rawData, this.purgerData);
+  
+  void addPurgerAction(PurgerAction action){
+    purgerData.actions.add(action);
+  }
+  int get rawDataSize => rawData.points.length ;
+  
 }
 
 

@@ -59,9 +59,9 @@ class TraceRawDataProfiler{
 
   TraceRawData _applyElevetionAverage(TraceRawData profileData){
     TraceRawDataPurger purger = new TraceRawDataPurger( _maxProfilePointsNumber * 2);
-    PurgerData  purgerData =  purger.analyse(profileData) ;
+    PurgerData  purgerData =  purger._analyse(profileData) ;
     int pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate();
-    purger.applyElevetionAverageWithMergeWidth(profileData, purgerData, pointsToMergeEachSide) ;
+    purger.applySmoothingWithElevetionAverage(profileData, purgerData:purgerData, pointsToMergeEachSide: pointsToMergeEachSide);
   }
   
 }
