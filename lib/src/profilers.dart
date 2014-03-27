@@ -23,7 +23,7 @@ class TraceRawDataProfiler{
     TracePoint lowerPoint = data.points.elementAt(0);
     TracePoint higherPoint  = data.points.elementAt(0);
     
-    for(int i = 0 ; i < clonedData.points.length - 1; i++  ){
+    for(int i = 0 ; i < clonedData.points.length; i++  ){
       TracePoint currentPoint = data.points.elementAt(i);
       if (i==0 || i==clonedData.points.length - 1 ){
         profileData.points.add(currentPoint);
