@@ -419,8 +419,7 @@ class DistanceComputer{
 
 class InclinationComputer{
   int inclination(num elevetionDiff, num distance){
-    
-    return  distance ==0 ? 0 :  (Math.tan(  elevetionDiff/distance ) * 100).round() ;
+    return  distance ==0 ? 0 :  (   Math.atan(elevetionDiff/distance)  / Math.PI * 180  ).round() ;
   }
 }
 

@@ -65,6 +65,7 @@ class TraceAnalysis {
     PointsComputer pointsComputer = new PointsComputer(pointStream.stream);
     ImportantPointsComputer importantPointsComputer = new ImportantPointsComputer(pointStream.stream); 
     PointDensityComputer pointDensityComputer = new PointDensityComputer(pointStream.stream);
+    LengthUpFlatDownComputer lengthUpFlatDownComputer = new LengthUpFlatDownComputer(pointStream.stream);
     
     for (var iter = rawData.points.iterator; iter.moveNext();) {
       pointStream.add(iter.current) ;
@@ -81,15 +82,6 @@ class TraceAnalysis {
     this._points = pointsComputer.points;
     this._importantPoints = importantPointsComputer.importantPoints;
     this._pointDensity = pointDensityComputer.pointDensity;
-    
-    pointStream = new StreamController.broadcast( sync: true);
-    LengthUpFlatDownComputer lengthUpFlatDownComputer = new LengthUpFlatDownComputer(pointStream.stream);
-    
-    for (var iter = rawData.points.iterator; iter.moveNext();) {
-      pointStream.add(iter.current) ;
-    }
-    pointStream.close();
-    
     this._inclinationUp = lengthUpFlatDownComputer.inclinationUp;
     this._inclinationDown = lengthUpFlatDownComputer.inclinationDown;
     this._lengthUp = lengthUpFlatDownComputer.lengthUp ;
@@ -130,5 +122,10 @@ class TraceAnalysis {
   num get difficulty => _difficulty ;
  
   num get pointDensity => _pointDensity ;
+  
+  void setInclination(num inclinationUp, num inclinationDown ){
+    _inclinationUp = inclinationUp;
+    _inclinationDown = inclinationDown;
+  }
 }
 

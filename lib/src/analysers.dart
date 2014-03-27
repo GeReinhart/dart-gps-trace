@@ -29,27 +29,41 @@ class TraceAnalyser{
   }
   
   TraceAnalysis buildTraceAnalysisFromRawData(TraceRawData rawData,
-        {bool applyPurge: false,
-         int idealMaxPointNumber:3500, 
-         SmoothingParameters smoothingParameters:null}
-              ){
-        
+                                                  {bool applyPurge: false,
+                                                   int idealMaxPointNumber:3500, 
+                                                   SmoothingParameters smoothingParameters:null}  ){
+        TraceAnalysis traceAnalysis = null;
         if (applyPurge){
           _traceRawDataPurger.deleteAlignedPoints( rawData, idealMaxPointNumber);
         }
         if (smoothingParameters != null && smoothingParameters.applySmooting){
-          
-          PurgerResult smoothData = _traceRawDataPurger.applySmoothingWithElevetionAverage(rawData, cloneData: true,
-                                             pointsToMergeEachSide: (smoothingParameters.numberOfMergedPoints-1) ~/ 2,
-                                             maxDistanceWithinMergedPoints: smoothingParameters.maxDistanceBetweenMergedPoints ) ;
-          
-          TraceAnalysis smoothTraceAnalysis = new TraceAnalysis.fromRawData(smoothData.rawData) ;
-          
-          return new TraceAnalysis.fromTraceAnalysis(smoothTraceAnalysis, rawData) ;
+          traceAnalysis = _applySmoothing(rawData, smoothingParameters) ;
         }else{
-          return new TraceAnalysis.fromRawData(rawData) ;
+          traceAnalysis = new TraceAnalysis.fromRawData(rawData) ;
         }
+        
+        int maxProfilePointsNumber = traceAnalysis.length ~/ 500 < 10 ? 10 : traceAnalysis.length ~/ 500 ; 
+        TraceRawData profileRawData = buildProfile(rawData, maxProfilePointsNumber:maxProfilePointsNumber) ;
+        
+        TraceAnalysis traceAnalysisForInclination = new TraceAnalysis.fromRawData(profileRawData) ; 
+        
+        traceAnalysis.setInclination( traceAnalysisForInclination.inclinationUp , traceAnalysisForInclination.inclinationDown);
+        
+        return traceAnalysis;
      
+  }
+  
+  TraceAnalysis _applySmoothing(TraceRawData rawData, SmoothingParameters smoothingParameters){
+    
+    int pointsToMergeEachSide = (smoothingParameters.numberOfMergedPoints-1) ~/ 2 ;
+    
+    PurgerResult smoothData = _traceRawDataPurger.applySmoothingWithElevetionAverage(rawData, cloneData: true,
+                          pointsToMergeEachSide: pointsToMergeEachSide,
+                          maxDistanceWithinMergedPoints: smoothingParameters.maxDistanceBetweenMergedPoints ) ;
+    
+    TraceAnalysis smoothTraceAnalysis = new TraceAnalysis.fromRawData(smoothData.rawData) ;
+    
+    return new TraceAnalysis.fromTraceAnalysis(smoothTraceAnalysis, rawData) ;
   }
   
   

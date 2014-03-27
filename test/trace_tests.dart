@@ -12,6 +12,20 @@ main() {
   SmoothingParameters low = SmoothingParameters.get( SmoothingLevel.LOW );
   SmoothingParameters no = SmoothingParameters.get( SmoothingLevel.NO );
 
+  
+  test('Calculate inclination', (){
+    
+    InclinationComputer inclinationComputer = new InclinationComputer();
+    expect( inclinationComputer.inclination(100, 100),  equals(45));
+    expect( inclinationComputer.inclination(100, 200),  equals(27));
+    expect( inclinationComputer.inclination(100, 300),  equals(18));
+    expect( inclinationComputer.inclination(100, 400),  equals(14));
+    
+  });
+    
+  
+  
+  
   test('Get smooting by String', (){
     SmoothingParameters mediumParameter = SmoothingParameters.get( SmoothingLevel.fromString("medium" ));
     expect(medium, equals(mediumParameter));
@@ -43,7 +57,7 @@ main() {
       expect(trace.startPoint.longitude, equals(5.76706));    
       expect(trace.startPoint.elevetion, equals(1321));
       expect(trace.up, equals(720));
-      expect(trace.inclinationUp, equals(34));  
+      expect(trace.inclinationUp, equals(24));  
     });
     
   });
@@ -133,7 +147,7 @@ main() {
   test('Check the profiler', () {
     checkProfile("test/resources/openrunner.com.2310762.gpx") ;
   });
-  
+ 
   void checkSmoothingDoNotChangeData(File file){
       traceAnalyser.buildTraceAnalysisFromGpxFile(file, applyPurge: true,smoothingParameters:no).then((noSmoothingTrace){
       
