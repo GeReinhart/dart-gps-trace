@@ -52,7 +52,7 @@ main() {
       expect(trace.points[104].latitude, equals(45.28948));    
       expect(trace.points[104].longitude, equals(5.76706));    
       expect(trace.points[104].elevetion, equals(1321));     
-      expect(trace.points[104].distance, equals(7659.886211803909));
+      expect(trace.points[104].distance, equals(3467.202540589613));
       expect(trace.startPoint.latitude, equals(45.28948));    
       expect(trace.startPoint.longitude, equals(5.76706));    
       expect(trace.startPoint.elevetion, equals(1321));
