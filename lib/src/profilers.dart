@@ -25,6 +25,11 @@ class TraceRawDataProfiler{
     
     for(int i = 0 ; i < clonedData.points.length - 1; i++  ){
       TracePoint currentPoint = data.points.elementAt(i);
+      if (i==0 || i==clonedData.points.length - 1 ){
+        profileData.points.add(currentPoint);
+        continue;
+      }
+      
       bool newSlice = i%sliceSize == 0 && i>0;
 
       if (newSlice){
