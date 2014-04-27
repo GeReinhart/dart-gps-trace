@@ -16,10 +16,11 @@ class GpxFileParser{
         XmlNode trkptNode = allNodesIter.current;
         XmlElement trkptElement = (trkptNode as XmlElement);
         XmlName name = trkptElement.name;
-        if (name.toString() != "trkpt"){
+        if (name.toString() != "trkpt" && name.toString() != "rtept"){
           continue;
         }
-        if ((trkptElement.parent  as XmlElement).name.toString()  != "trkseg"){
+        String parent = (trkptElement.parent  as XmlElement).name.toString();
+        if (parent  != "trkseg" && parent != "rte"){
           continue;
         }
         

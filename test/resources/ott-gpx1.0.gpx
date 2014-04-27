@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx
+  version="1.0"
+  creator="GPSBabel - http://www.gpsbabel.org"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.topografix.com/GPX/1/0"
+  xsi:schemaLocation="http://www.topografix.com/GPX/1/0 http://www.topografix.com/GPX/1/0/gpx.xsd">
+<time>2014-04-26T16:30:23Z</time>
+<bounds minlat="45.193510000" minlon="5.719480000" maxlat="45.477800000" maxlon="5.947000000"/>
+<rte>
+  <name>--Grenoble-- OR-3334257:Traversée chartreuse</name>
+  <desc>Generated from track --Grenoble-- OR-3334257:Traversée chartreuse</desc>
+  <rtept lat="45.193510000" lon="5.719480000">
+    <ele>216.000000</ele>
+    <name>RPT001</name>
+  </rtept>
+  <rtept lat="45.205560000" lon="5.727630000">
+    <ele>596.000000</ele>
+    <name>RPT002</name>
+  </rtept>
+  <rtept lat="45.204180000" lon="5.725930000">
+    <ele>598.000000</ele>
+    <name>RPT003</name>
+  </rtept>
+  <rtept lat="45.205850000" lon="5.726810000">
+    <ele>621.000000</ele>
+    <name>RPT004</name>
+  </rtept>
+  <rtept lat="45.204600000" lon="5.725020000">
+    <ele>633.000000</ele>
+    <name>RPT005</name>
+  </rtept>
+  <rtept lat="45.210590000" lon="5.727010000">
+    <ele>755.000000</ele>
+    <name>RPT006</name>
+  </rtept>
+  <rtept lat="45.235950000" lon="5.750950000">
+    <ele>803.000000</ele>
+    <name>RPT007</name>
+  </rtept>
+  <rtept lat="45.232670000" lon="5.754690000">
+    <ele>869.000000</ele>
+    <name>RPT008</name>
+  </rtept>
+  <rtept lat="45.235560000" lon="5.756100000">
+    <ele>1029.000000</ele>
+    <name>RPT009</name>
+  </rtept>
+  <rtept lat="45.233510000" lon="5.759210000">
+    <ele>1074.000000</ele>
+    <name>RPT010</name>
+  </rtept>
+  <rtept lat="45.236420000" lon="5.757600000">
+    <ele>1161.000000</ele>
+    <name>RPT011</name>
+  </rtept>
+  <rtept lat="45.236230000" lon="5.768460000">
+    <ele>1216.000000</ele>
+    <name>RPT012</name>
+  </rtept>
+  <rtept lat="45.246090000" lon="5.783500000">
+    <ele>1305.000000</ele>
+    <name>RPT013</name>
+  </rtept>
+  <rtept lat="45.252720000" lon="5.785240000">
+    <ele>1198.000000</ele>
+    <name>RPT014</name>
+  </rtept>
+  <rtept lat="45.252710000" lon="5.781690000">
+    <ele>1112.000000</ele>
+    <name>RPT015</name>
+  </rtept>
+  <rtept lat="45.258020000" lon="5.779220000">
+    <ele>993.000000</ele>
+    <name>RPT016</name>
+  </rtept>
+  <rtept lat="45.261940000" lon="5.790110000">
+    <ele>1035.000000</ele>
+    <name>RPT017</name>
+  </rtept>
+  <rtept lat="45.281520000" lon="5.809170000">
+    <ele>1416.000000</ele>
+    <name>RPT018</name>
+  </rtept>
+  <rtept lat="45.280870000" lon="5.816730000">
+    <ele>1438.000000</ele>
+    <name>RPT019</name>
+  </rtept>
+  <rtept lat="45.300100000" lon="5.824150000">
+    <ele>1540.000000</ele>
+    <name>RPT020</name>
+  </rtept>
+  <rtept lat="45.302530000" lon="5.835410000">
+    <ele>1409.000000</ele>
+    <name>RPT021</name>
+  </rtept>
+  <rtept lat="45.308330000" lon="5.829340000">
+    <ele>1492.000000</ele>
+    <name>RPT022</name>
+  </rtept>
+  <rtept lat="45.315110000" lon="5.832040000">
+    <ele>1599.000000</ele>
+    <name>RPT023</name>
+  </rtept>
+  <rtept lat="45.310740000" lon="5.839610000">
+    <ele>1569.000000</ele>
+    <name>RPT024</name>
+  </rtept>
+  <rtept lat="45.310910000" lon="5.849140000">
+    <ele>1794.000000</ele>
+    <name>RPT025</name>
+  </rtept>
+  <rtept lat="45.308480000" lon="5.852650000">
+    <ele>1891.000000</ele>
+    <name>RPT026</name>
+  </rtept>
+  <rtept lat="45.310220000" lon="5.855600000">
+    <ele>2014.000000</ele>
+    <name>RPT027</name>
+  </rtept>
+  <rtept lat="45.318940000" lon="5.854750000">
+    <ele>1783.000000</ele>
+    <name>RPT028</name>
+  </rtept>
+  <rtept lat="45.322400000" lon="5.863650000">
+    <ele>1747.000000</ele>
+    <name>RPT029</name>
+  </rtept>
+  <rtept lat="45.329720000" lon="5.865280000">
+    <ele>1705.000000</ele>
+    <name>RPT030</name>
+  </rtept>
+  <rtept lat="45.333610000" lon="5.872110000">
+    <ele>1765.000000</ele>
+    <name>RPT031</name>
+  </rtept>
+  <rtept lat="45.341010000" lon="5.871890000">
+    <ele>1616.000000</ele>
+    <name>RPT032</name>
+  </rtept>
+  <rtept lat="45.340390000" lon="5.874790000">
+    <ele>1724.000000</ele>
+    <name>RPT033</name>
+  </rtept>
+  <rtept lat="45.355970000" lon="5.885610000">
+    <ele>1689.000000</ele>
+    <name>RPT034</name>
+  </rtept>
+  <rtept lat="45.364420000" lon="5.885100000">
+    <ele>1622.000000</ele>
+    <name>RPT035</name>
+  </rtept>
+  <rtept lat="45.393110000" lon="5.900030000">
+    <ele>1520.000000</ele>
+    <name>RPT036</name>
+  </rtept>
+  <rtept lat="45.396460000" lon="5.907290000">
+    <ele>1549.000000</ele>
+    <name>RPT037</name>
+  </rtept>
+  <rtept lat="45.434470000" lon="5.923580000">
+    <ele>1556.000000</ele>
+    <name>RPT038</name>
+  </rtept>
+  <rtept lat="45.441920000" lon="5.918800000">
+    <ele>1538.000000</ele>
+    <name>RPT039</name>
+  </rtept>
+  <rtept lat="45.449820000" lon="5.932640000">
+    <ele>1723.000000</ele>
+    <name>RPT040</name>
+  </rtept>
+  <rtept lat="45.449460000" lon="5.929750000">
+    <ele>1766.000000</ele>
+    <name>RPT041</name>
+  </rtept>
+  <rtept lat="45.455800000" lon="5.928610000">
+    <ele>1725.000000</ele>
+    <name>RPT042</name>
+  </rtept>
+  <rtept lat="45.459300000" lon="5.935080000">
+    <ele>1657.000000</ele>
+    <name>RPT043</name>
+  </rtept>
+  <rtept lat="45.465670000" lon="5.935160000">
+    <ele>1520.000000</ele>
+    <name>RPT044</name>
+  </rtept>
+  <rtept lat="45.470320000" lon="5.939960000">
+    <ele>1195.000000</ele>
+    <name>RPT045</name>
+  </rtept>
+  <rtept lat="45.468200000" lon="5.942180000">
+    <ele>1150.000000</ele>
+    <name>RPT046</name>
+  </rtept>
+  <rtept lat="45.471560000" lon="5.942070000">
+    <ele>1046.000000</ele>
+    <name>RPT047</name>
+  </rtept>
+  <rtept lat="45.473310000" lon="5.947000000">
+    <ele>902.000000</ele>
+    <name>RPT048</name>
+  </rtept>
+  <rtept lat="45.474910000" lon="5.939440000">
+    <ele>868.000000</ele>
+    <name>RPT049</name>
+  </rtept>
+  <rtept lat="45.477800000" lon="5.938270000">
+    <ele>839.000000</ele>
+    <name>RPT050</name>
+  </rtept>
+</rte>
+<trk>
+  <name>--Grenoble-- OR-3334257:Traversée chartreuse</name>
+<trkseg>
+<trkpt lat="45.193510000" lon="5.719480000">
+  <ele>216.000000</ele>
+</trkpt>
+<trkpt lat="45.205560000" lon="5.727630000">
+  <ele>596.000000</ele>
+</trkpt>
+<trkpt lat="45.204180000" lon="5.725930000">
+  <ele>598.000000</ele>
+</trkpt>
+<trkpt lat="45.205850000" lon="5.726810000">
+  <ele>621.000000</ele>
+</trkpt>
+<trkpt lat="45.204600000" lon="5.725020000">
+  <ele>633.000000</ele>
+</trkpt>
+<trkpt lat="45.210590000" lon="5.727010000">
+  <ele>755.000000</ele>
+</trkpt>
+<trkpt lat="45.235950000" lon="5.750950000">
+  <ele>803.000000</ele>
+</trkpt>
+<trkpt lat="45.232670000" lon="5.754690000">
+  <ele>869.000000</ele>
+</trkpt>
+<trkpt lat="45.235560000" lon="5.756100000">
+  <ele>1029.000000</ele>
+</trkpt>
+<trkpt lat="45.233510000" lon="5.759210000">
+  <ele>1074.000000</ele>
+</trkpt>
+<trkpt lat="45.236420000" lon="5.757600000">
+  <ele>1161.000000</ele>
+</trkpt>
+<trkpt lat="45.236230000" lon="5.768460000">
+  <ele>1216.000000</ele>
+</trkpt>
+<trkpt lat="45.246090000" lon="5.783500000">
+  <ele>1305.000000</ele>
+</trkpt>
+<trkpt lat="45.252720000" lon="5.785240000">
+  <ele>1198.000000</ele>
+</trkpt>
+<trkpt lat="45.252710000" lon="5.781690000">
+  <ele>1112.000000</ele>
+</trkpt>
+<trkpt lat="45.258020000" lon="5.779220000">
+  <ele>993.000000</ele>
+</trkpt>
+<trkpt lat="45.261940000" lon="5.790110000">
+  <ele>1035.000000</ele>
+</trkpt>
+<trkpt lat="45.281520000" lon="5.809170000">
+  <ele>1416.000000</ele>
+</trkpt>
+<trkpt lat="45.280870000" lon="5.816730000">
+  <ele>1438.000000</ele>
+</trkpt>
+<trkpt lat="45.300100000" lon="5.824150000">
+  <ele>1540.000000</ele>
+</trkpt>
+<trkpt lat="45.302530000" lon="5.835410000">
+  <ele>1409.000000</ele>
+</trkpt>
+<trkpt lat="45.308330000" lon="5.829340000">
+  <ele>1492.000000</ele>
+</trkpt>
+<trkpt lat="45.315110000" lon="5.832040000">
+  <ele>1599.000000</ele>
+</trkpt>
+<trkpt lat="45.310740000" lon="5.839610000">
+  <ele>1569.000000</ele>
+</trkpt>
+<trkpt lat="45.310910000" lon="5.849140000">
+  <ele>1794.000000</ele>
+</trkpt>
+<trkpt lat="45.308480000" lon="5.852650000">
+  <ele>1891.000000</ele>
+</trkpt>
+<trkpt lat="45.310220000" lon="5.855600000">
+  <ele>2014.000000</ele>
+</trkpt>
+<trkpt lat="45.318940000" lon="5.854750000">
+  <ele>1783.000000</ele>
+</trkpt>
+<trkpt lat="45.322400000" lon="5.863650000">
+  <ele>1747.000000</ele>
+</trkpt>
+<trkpt lat="45.329720000" lon="5.865280000">
+  <ele>1705.000000</ele>
+</trkpt>
+<trkpt lat="45.333610000" lon="5.872110000">
+  <ele>1765.000000</ele>
+</trkpt>
+<trkpt lat="45.341010000" lon="5.871890000">
+  <ele>1616.000000</ele>
+</trkpt>
+<trkpt lat="45.340390000" lon="5.874790000">
+  <ele>1724.000000</ele>
+</trkpt>
+<trkpt lat="45.355970000" lon="5.885610000">
+  <ele>1689.000000</ele>
+</trkpt>
+<trkpt lat="45.364420000" lon="5.885100000">
+  <ele>1622.000000</ele>
+</trkpt>
+<trkpt lat="45.393110000" lon="5.900030000">
+  <ele>1520.000000</ele>
+</trkpt>
+<trkpt lat="45.396460000" lon="5.907290000">
+  <ele>1549.000000</ele>
+</trkpt>
+<trkpt lat="45.434470000" lon="5.923580000">
+  <ele>1556.000000</ele>
+</trkpt>
+<trkpt lat="45.441920000" lon="5.918800000">
+  <ele>1538.000000</ele>
+</trkpt>
+<trkpt lat="45.449820000" lon="5.932640000">
+  <ele>1723.000000</ele>
+</trkpt>
+<trkpt lat="45.449460000" lon="5.929750000">
+  <ele>1766.000000</ele>
+</trkpt>
+<trkpt lat="45.455800000" lon="5.928610000">
+  <ele>1725.000000</ele>
+</trkpt>
+<trkpt lat="45.459300000" lon="5.935080000">
+  <ele>1657.000000</ele>
+</trkpt>
+<trkpt lat="45.465670000" lon="5.935160000">
+  <ele>1520.000000</ele>
+</trkpt>
+<trkpt lat="45.470320000" lon="5.939960000">
+  <ele>1195.000000</ele>
+</trkpt>
+<trkpt lat="45.468200000" lon="5.942180000">
+  <ele>1150.000000</ele>
+</trkpt>
+<trkpt lat="45.471560000" lon="5.942070000">
+  <ele>1046.000000</ele>
+</trkpt>
+<trkpt lat="45.473310000" lon="5.947000000">
+  <ele>902.000000</ele>
+</trkpt>
+<trkpt lat="45.474910000" lon="5.939440000">
+  <ele>868.000000</ele>
+</trkpt>
+<trkpt lat="45.477800000" lon="5.938270000">
+  <ele>839.000000</ele>
+</trkpt>
+</trkseg>
+</trk>
+</gpx>

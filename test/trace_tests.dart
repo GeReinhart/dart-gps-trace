@@ -11,7 +11,29 @@ main() {
   SmoothingParameters medium = SmoothingParameters.get( SmoothingLevel.MEDIUM );
   SmoothingParameters low = SmoothingParameters.get( SmoothingLevel.LOW );
   SmoothingParameters no = SmoothingParameters.get( SmoothingLevel.NO );
-
+  
+  void printTrace(TraceAnalysis trace){
+    print("difficulty: ${trace.difficulty}");
+    print("length: ${trace.length} ");
+    print("pointDensity: ${trace.pointDensity}");
+    print("points.length: ${trace.points.length}");
+    print("up: ${trace.up}");
+    print("down: ${trace.down}");
+    print("upperPoint.elevetion: ${trace.upperPoint.elevetion}");
+    print("lowerPoint.elevetion: ${trace.lowerPoint.elevetion}");
+    print("inclinationUp: ${trace.inclinationUp}");
+  }
+  
+  
+  test('Analyse a gpx 1.0 file', () {
+     File file = new File("test/resources/ott-gpx1.0.gpx"); 
+     traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
+       printTrace(trace);
+       expect(trace.points.length, equals(100));
+       expect(trace.up, equals(5190));
+     });
+     
+   });
   
   test('Calculate inclination', (){
     
@@ -39,7 +61,7 @@ main() {
     expect(distance.round(), equals(5607));
   });  
   
- test('Analyse a gpx file', () {
+ test('Analyse a gpx 1.1 file', () {
     File file = new File("test/resources/openrunner.com.1255360.gpx"); // Chamchaude
     traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
       expect(trace.upperPoint.elevetion, equals(2041));
@@ -62,6 +84,8 @@ main() {
     
   });
  
+
+ 
  
  test('Check difficulty between a long flat trace and short trace with a bit of elevetion is still consistent', () {
    File file = new File("test/resources/la-boussole-foullee_de_crossey.gpx");
@@ -78,17 +102,7 @@ main() {
  });
  
  
-  void printTrace(TraceAnalysis trace){
-    print("difficulty: ${trace.difficulty}");
-    print("length: ${trace.length} ");
-    print("pointDensity: ${trace.pointDensity}");
-    print("points.length: ${trace.points.length}");
-    print("up: ${trace.up}");
-    print("down: ${trace.down}");
-    print("upperPoint.elevetion: ${trace.upperPoint.elevetion}");
-    print("lowerPoint.elevetion: ${trace.lowerPoint.elevetion}");
-    print("inclinationUp: ${trace.inclinationUp}");
-  }
+
   
   void checkUpAndLengthComputing(String filePath, SmoothingParameters smoothingParameters, num expectedUp, num expectedLength ){
     
