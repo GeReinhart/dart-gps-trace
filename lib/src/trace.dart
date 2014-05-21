@@ -87,6 +87,23 @@ class TraceAnalysis {
     this._lengthUp = lengthUpFlatDownComputer.lengthUp ;
     this._lengthDown = lengthUpFlatDownComputer.lengthDown ;
     
+    num firstPointElevetion = rawData.points.first.elevetion;
+    num lastPointElevetion = rawData.points.last.elevetion;
+    if ( _upperPoint.elevetion - firstPointElevetion > _up ){
+      _up = _upperPoint.elevetion - firstPointElevetion ;
+    }
+    if ( _upperPoint.elevetion - lastPointElevetion > _down ){
+      _down = _upperPoint.elevetion - lastPointElevetion ;
+    }    
+    if ( _upperPoint.index > _lowerPoint.index &&
+         _upperPoint.elevetion - _lowerPoint.elevetion > _up ){
+      _up = _upperPoint.elevetion - _lowerPoint.elevetion ;
+    }
+    if ( _upperPoint.index < _lowerPoint.index &&
+         _upperPoint.elevetion - _lowerPoint.elevetion > _down ){
+      _down = _upperPoint.elevetion - _lowerPoint.elevetion ;
+    }    
+    
   }
     
   List<TracePoint> get points => _points;
