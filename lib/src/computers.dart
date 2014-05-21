@@ -164,7 +164,7 @@ class UpComputer{
   TracePoint _lowBase ;
   TracePoint _upBase ;
   
-  UpComputer(Stream stream, {elevetionThreshold:60,minDistanceThreshold:200}){
+  UpComputer(Stream stream, {elevetionThreshold:20,minDistanceThreshold:100}){
     this._elevetionThreshold = elevetionThreshold;
     this._minDistanceThreshold = minDistanceThreshold;
     stream.listen((point) => _compute(point as TracePoint)) ;
@@ -221,7 +221,7 @@ class DownComputer{
   TracePoint _lowBase ;
   TracePoint _upBase ;
   
-  DownComputer(Stream stream, {elevetionThreshold:60,minDistanceThreshold:200}){
+  DownComputer(Stream stream, {elevetionThreshold:20,minDistanceThreshold:100}){
     this._elevetionThreshold = elevetionThreshold;
     this._minDistanceThreshold = minDistanceThreshold;
     stream.listen((point) => _compute(point as TracePoint)) ;
