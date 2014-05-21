@@ -26,6 +26,28 @@ main() {
   }
   
   
+  
+  test('closests points', (){
+      
+    File file = new File("test/resources/ott-gpx1.0.gpx"); 
+    traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
+      printTrace(trace);
+      
+      TracePoint point = trace.points[10] ;
+      
+      List<TracePoint> closePoints = trace.closePointsFrom(point, 100);
+      
+      expect(closePoints.length, equals(2));
+      expect(closePoints.first.latitude, equals(point.latitude));
+      expect(closePoints.first.longitude, equals(point.longitude));
+      expect(closePoints.last.latitude, equals(point.latitude));
+      expect(closePoints.last.longitude, equals(point.longitude));
+      
+    });
+      
+  });
+
+  
   test('Analyse a gpx 1.0 file', () {
      File file = new File("test/resources/ott-gpx1.0.gpx"); 
      traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){

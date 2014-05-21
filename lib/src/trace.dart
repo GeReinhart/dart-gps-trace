@@ -106,6 +106,20 @@ class TraceAnalysis {
     
   }
     
+  
+  List<TracePoint> closePointsFrom(TracePoint point, int distanceMax) {
+  
+    List<TracePoint> closePoints = new List<TracePoint>();
+    DistanceComputer distanceComputer = new DistanceComputer();
+    _points.forEach((tracePoint){
+      if (distanceComputer.distance(point, tracePoint) < distanceMax ){
+        closePoints.add(tracePoint);      
+      }
+    });
+    
+    return closePoints ;
+  }
+  
   List<TracePoint> get points => _points;
   
   List<TracePoint> get importantPoints => _importantPoints;

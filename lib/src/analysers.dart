@@ -71,4 +71,5 @@ class TraceAnalyser{
     return _profiler.profile(data,maxProfilePointsNumber:maxProfilePointsNumber) ;
   }
   
+
 }
