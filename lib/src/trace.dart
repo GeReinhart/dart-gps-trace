@@ -95,6 +95,12 @@ class TraceAnalysis {
     if ( _upperPoint.elevetion - lastPointElevetion > _down ){
       _down = _upperPoint.elevetion - lastPointElevetion ;
     }    
+    if ( _lowerPoint.elevetion - lastPointElevetion > _up ){
+      _up = _lowerPoint.elevetion - lastPointElevetion ;
+    }
+    if ( _upperPoint.elevetion - lastPointElevetion > _down ){
+      _down = _upperPoint.elevetion - lastPointElevetion ;
+    }
     if ( _upperPoint.index > _lowerPoint.index &&
          _upperPoint.elevetion - _lowerPoint.elevetion > _up ){
       _up = _upperPoint.elevetion - _lowerPoint.elevetion ;
