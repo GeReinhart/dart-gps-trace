@@ -107,18 +107,35 @@ class TraceAnalysis {
   }
     
   
-  List<TracePoint> closePointsFrom(TracePoint point, int distanceMax) {
-  
+  List<TracePoint> closePointsFrom(TracePoint point, num distanceMax, {num distanceMinBetween2ClosePoints: 1000}) {
     List<TracePoint> closePoints = new List<TracePoint>();
     DistanceComputer distanceComputer = new DistanceComputer();
-    _points.forEach((tracePoint){
-      if (distanceComputer.distance(point, tracePoint) < distanceMax ){
-        closePoints.add(tracePoint);      
+    _points.forEach((loopPoint){
+      if (distanceComputer.distance(point, loopPoint) < distanceMax ){
+        if (   closePoints.isEmpty 
+            || _distanceMinBetween(closePoints,loopPoint) > distanceMinBetween2ClosePoints ){
+          closePoints.add(loopPoint);      
+        }
       }
     });
-    
     return closePoints ;
   }
+  
+  num _distanceMinBetween(List<TracePoint> points, TracePoint anotherPoint){
+    num distanceMin = null;
+    points.forEach((loopPoint){
+      num currentDistance = ( anotherPoint.distance - loopPoint.distance).abs() ;
+      if (distanceMin == null){
+        distanceMin = currentDistance ;
+      }else{
+        if ( distanceMin >  currentDistance ){
+          distanceMin = currentDistance ;
+        }
+      }
+    });
+    return distanceMin ;
+  }
+  
   
   List<TracePoint> get points => _points;
   
