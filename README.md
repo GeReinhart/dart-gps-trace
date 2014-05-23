@@ -1,5 +1,7 @@
 # GPS trace
 
+[![Build Status](https://drone.io/github.com/GeReinhart/dart-gps-trace/status.png)](https://drone.io/github.com/GeReinhart/dart-gps-trace/latest)
+
 GPS trace library allow you to parse and analyse GPS files.
 
 ## Installation
