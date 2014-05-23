@@ -14,4 +14,4 @@ function test-dart-sources {
 get-dart-dependencies 
 test-dart-sources
 
-pub publish
+pub publish --force
