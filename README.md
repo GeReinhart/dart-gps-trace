@@ -11,7 +11,7 @@ Add the Gps trace dependency to your project’s pubspec.yaml.
     dependencies:
       gps_trace: "0.1.0"
 
-Then, run `pub install`.
+Then, run `pub get`.
 
 ## Usage
     
