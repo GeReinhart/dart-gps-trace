@@ -24,8 +24,8 @@ Then, run `pub install`.
      traceAnalyser.buildTraceAnalysisFromGpxFile(file).then((trace){
 
          print("Trace length: ${trace.length} meters");
-	 print("Positive elevetion: ${trace.up}");
-	 print("Highest point elevetion: ${trace.upperPoint.elevetion}");
+         print("Positive elevetion: ${trace.up}");
+         print("Highest point elevetion: ${trace.upperPoint.elevetion}");
 
 
      });
