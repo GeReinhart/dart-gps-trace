@@ -58,7 +58,7 @@ class SmoothingParameters{
   static SmoothingParameters get(SmoothingLevel smoothingLevel){
     
     if(params.isEmpty){
-      int distanceStep = 35 ;
+      int distanceStep = 25 ;
       params[ SmoothingLevel.NO ]    = new SmoothingParameters.noSmoothing();
       params[ SmoothingLevel.LOW ]   = new SmoothingParameters( (2*1)+1,  distanceStep*1);
       params[ SmoothingLevel.MEDIUM ]= new SmoothingParameters( (2*2)+1,  distanceStep*2);

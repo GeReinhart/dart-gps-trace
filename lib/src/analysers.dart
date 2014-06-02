@@ -39,7 +39,7 @@ class TraceAnalyser{
         if (smoothingParameters != null && smoothingParameters.applySmooting){
           traceAnalysis = _applySmoothing(rawData, smoothingParameters) ;
         }else{
-          traceAnalysis = new TraceAnalysis.fromRawData(rawData) ;
+          traceAnalysis = new TraceAnalysis.fromRawData(rawData, elevetionThreshold:1,minDistanceThreshold:1) ;
         }
         
         int maxProfilePointsNumber = traceAnalysis.length ~/ 500 < 10 ? 10 : traceAnalysis.length ~/ 500 ; 

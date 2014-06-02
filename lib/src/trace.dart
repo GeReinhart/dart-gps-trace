@@ -48,19 +48,19 @@ class TraceAnalysis {
     _difficulty = traceAnalysis.difficulty;
   }
   
-  TraceAnalysis.fromRawData( TraceRawData rawData){
-    _loadFromRawData( rawData );
+  TraceAnalysis.fromRawData( TraceRawData rawData,  {elevetionThreshold:20,minDistanceThreshold:100}){
+    _loadFromRawData( rawData, elevetionThreshold:elevetionThreshold,minDistanceThreshold:minDistanceThreshold );
   }
  
-  void  _loadFromRawData( TraceRawData rawData  ){
+  void  _loadFromRawData( TraceRawData rawData,  {elevetionThreshold:20,minDistanceThreshold:100}  ){
 
     StreamController pointStream = new StreamController.broadcast( sync: true);
 
     UpperPointComputer upperPointComputer = new UpperPointComputer(pointStream.stream);
     LowerPointComputer lowerPointComputer = new LowerPointComputer(pointStream.stream);    
     LengthComputer lengthComputer = new LengthComputer(pointStream.stream);
-    UpComputer upComputer = new UpComputer(pointStream.stream);
-    DownComputer downComputer = new DownComputer(pointStream.stream);
+    UpComputer upComputer = new UpComputer(pointStream.stream, elevetionThreshold:elevetionThreshold,minDistanceThreshold:minDistanceThreshold);
+    DownComputer downComputer = new DownComputer(pointStream.stream, elevetionThreshold:elevetionThreshold,minDistanceThreshold:minDistanceThreshold);
     DifficultyComputer difficultyComputer = new DifficultyComputer(pointStream.stream);
     PointsComputer pointsComputer = new PointsComputer(pointStream.stream);
     ImportantPointsComputer importantPointsComputer = new ImportantPointsComputer(pointStream.stream); 

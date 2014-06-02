@@ -69,7 +69,7 @@ class TraceRawDataPurger{
        pointsToMergeEachSide = (purgerData.originalDensity / 10).truncate() - 4 ;
     }
     if(  maxDistanceWithinMergedPoints == null ){
-      maxDistanceWithinMergedPoints = pointsToMergeEachSide * 35 ;
+      maxDistanceWithinMergedPoints = pointsToMergeEachSide * 25 ;
     }    
     
     if (pointsToMergeEachSide>0){
