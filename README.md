@@ -46,7 +46,10 @@ Then, run `pub get`.
  * negative elevetion in meters 
  * average inclination up
  * average inclination down
- 
+* Purge aligned points
+* Smoothing 
+ * by elevetion average between close points
+ * by elevetion threshold
  
 ## Who is using it ?
 * http://www.la-boussole.info 
