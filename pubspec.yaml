@@ -1,9 +1,11 @@
 name: gps_trace
-author: gerald reinhart
+version: 0.1.0
+author: Gerald Reinhart <gerald.reinhart@gmail.com>
 description: Parsing and analysing gps trace files
 homepage: https://github.com/GeReinhart/dart-gps-trace
 environment:
   sdk: '>=1.0.0 <2.0.0'
 dependencies:
-  petitparser: 1.0.0
-  unittest: any
+  petitparser: ">=1.0.0 <2.0.0"
+dev_dependencies:
+  unittest: '>=0.8.0'
