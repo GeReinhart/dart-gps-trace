@@ -46,3 +46,7 @@ Then, run `pub get`.
  * negative elevetion in meters 
  * average inclination up
  * average inclination down
+ 
+ 
+## Who is using it ?
+* http://www.la-boussole.info 
