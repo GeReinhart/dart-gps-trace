@@ -2,6 +2,7 @@ cmd.txt
 packages
 .buildlog
 out
+pubspec.lock
 
 *~
 *.swp
