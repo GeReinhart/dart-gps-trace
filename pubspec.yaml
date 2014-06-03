@@ -1,5 +1,5 @@
 name: gps_trace
-version: 0.1.0
+version: 0.1.1
 author: Gerald Reinhart <gerald.reinhart@gmail.com>
 description: Parsing and analysing gps trace files
 homepage: https://github.com/GeReinhart/dart-gps-trace

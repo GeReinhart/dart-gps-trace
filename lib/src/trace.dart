@@ -25,9 +25,11 @@ class TraceAnalysis {
   
   num _difficulty = 0;
   
+  SmoothingParameters _smoothingParameters = SmoothingParameters.get(SmoothingLevel.NO) ;
+  
   TraceAnalysis();
 
-  TraceAnalysis.fromTraceAnalysis( TraceAnalysis traceAnalysis,TraceRawData rawData){
+  TraceAnalysis.fromTraceAnalysis( TraceAnalysis traceAnalysis,TraceRawData rawData, {SmoothingLevel  smoothingLevel: SmoothingLevel.NO}  ){
     _points = rawData.points ;
     _pointDensity = traceAnalysis.pointDensity;
     _importantPoints = traceAnalysis.importantPoints;
@@ -46,6 +48,8 @@ class TraceAnalysis {
     _up = traceAnalysis.up ; 
     
     _difficulty = traceAnalysis.difficulty;
+   
+    _smoothingParameters = SmoothingParameters.get(smoothingLevel);
   }
   
   TraceAnalysis.fromRawData( TraceRawData rawData,  {elevetionThreshold:20,minDistanceThreshold:100}){
@@ -158,11 +162,13 @@ class TraceAnalysis {
   TracePoint get startPoint =>  _points.isNotEmpty ? _points.first : null ;
   
   num get length => _length ;
+  void set length(num length) { this._length = length ;} 
   
   num get down => _down ;
   
   num get up => _up ;
-
+  void set up(num up) { this._up = up ;} 
+  
   num get lengthUp =>   _lengthUp ;
   
   num get lengthFlat => _lengthFlat ;
@@ -176,6 +182,8 @@ class TraceAnalysis {
   num get difficulty => _difficulty ;
  
   num get pointDensity => _pointDensity ;
+  
+  SmoothingParameters get smoothingParameters => _smoothingParameters ;
   
   void setInclination(num inclinationUp, num inclinationDown ){
     _inclinationUp = inclinationUp;
