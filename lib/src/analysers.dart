@@ -12,20 +12,19 @@ class TraceAnalyser{
     _traceRawDataPurger = new TraceRawDataPurger() ;
   }
   
-  Future<TraceAnalysis> buildTraceAnalysisFromGpxFile(File gpxFile,
+  TraceAnalysis buildTraceAnalysisFromGpxFileContent(String gpxFileContentAsString,
         {bool applyPurge: false,
          int idealMaxPointNumber:3500, 
          SmoothingParameters smoothingParameters:null}
               ){
-    return gpxFile.readAsString().then((gpxFileContent) { 
-        TraceRawData rawData = _gpxFileParser.parseFromContentFile(gpxFileContent) ;
+    
+        TraceRawData rawData = _gpxFileParser.parseFromContentFile(gpxFileContentAsString) ;
         
         return buildTraceAnalysisFromRawData(rawData,
                                           applyPurge: applyPurge,
                                           idealMaxPointNumber:idealMaxPointNumber, 
                                           smoothingParameters:smoothingParameters) ;
-      }
-    );
+      
   }
   
   TraceAnalysis buildTraceAnalysisFromRawData(TraceRawData rawData,

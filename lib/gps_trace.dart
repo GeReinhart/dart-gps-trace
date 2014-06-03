@@ -4,7 +4,6 @@
 library gps_trace;
 
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as Math ;
 import 'package:petitparser/xml.dart';
 
