@@ -8,4 +8,4 @@ environment:
 dependencies:
   petitparser: ">=1.0.0 <2.0.0"
 dev_dependencies:
-  unittest: '>=0.8.0'
+  unittest: ">=0.11.0+1 <0.12.0"
