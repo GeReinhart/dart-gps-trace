@@ -10,7 +10,7 @@ Can be used on client or server side.
 Add the Gps trace dependency to your project’s pubspec.yaml.
 
     dependencies:
-      gps_trace: "0.1.1"
+      gps_trace: ">=0.1.0 <0.2.0"
 
 Then, run `pub get`.
 
@@ -24,6 +24,7 @@ Then, run `pub get`.
      File gpxFile = new File("test/resources/my_favorite_trail.gpx"); 
 
      gpxFile.readAsString().then((gpxFileContent) {
+     
          traceAnalyser.buildTraceAnalysisFromGpxFileContent(gpxFileContent).then((trace){
      
            print("Trace length: ${trace.length} meters");
