@@ -1,7 +1,7 @@
 
 import 'dart:io';
 import 'dart:async';
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 
 import '../lib/gps_trace.dart';
 
@@ -95,7 +95,7 @@ main() {
   
  test('Analyse a gpx 1.1 file', () {
     File file = new File("test/resources/openrunner.com.1255360.gpx"); // Chamchaude
-    buildTraceAnalysisFromGpxFile(file).then((trace){
+    buildTraceAnalysisFromGpxFile(file).then((trace) {
       expect(trace.upperPoint.elevetion, equals(2041));
       expect(trace.lowerPoint.elevetion, equals(1321));
       expect(trace.points.length, equals(105));
@@ -106,14 +106,13 @@ main() {
       expect(trace.points[104].latitude, equals(45.28948));    
       expect(trace.points[104].longitude, equals(5.76706));    
       expect(trace.points[104].elevetion, equals(1321));     
-      expect(trace.points[104].distance, equals(3467.202540589613));
+      expect(trace.points[104].distance, closeTo(3467.202540589613, 1e-12));
       expect(trace.startPoint.latitude, equals(45.28948));    
       expect(trace.startPoint.longitude, equals(5.76706));    
       expect(trace.startPoint.elevetion, equals(1321));
       expect(trace.up, equals(925));
-      expect(trace.inclinationUp, equals(24));  
+      expect(trace.inclinationUp, equals(24));
     });
-    
   });
  
 
