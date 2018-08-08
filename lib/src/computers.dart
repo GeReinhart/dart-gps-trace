@@ -403,10 +403,10 @@ class DistanceComputer{
   double distance(TracePoint start, TracePoint end){
     
     double R = 6371.0; 
-    double dLat = ( end.latitude   - start.latitude  ) * Math.PI / 180; 
-    double dLon = ( end.longitude  - start.longitude ) * Math.PI / 180;
-    double lat1 = (                  start.latitude  ) * Math.PI / 180; 
-    double lat2 = (                    end.latitude  ) * Math.PI / 180; 
+    double dLat = ( end.latitude   - start.latitude  ) * Math.pi / 180; 
+    double dLon = ( end.longitude  - start.longitude ) * Math.pi / 180;
+    double lat1 = (                  start.latitude  ) * Math.pi / 180; 
+    double lat2 = (                    end.latitude  ) * Math.pi / 180; 
     
     double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
         Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
@@ -419,7 +419,7 @@ class DistanceComputer{
 
 class InclinationComputer{
   int inclination(num elevetionDiff, num distance){
-    return  distance ==0 ? 0 :  (   Math.atan(elevetionDiff/distance)  / Math.PI * 180  ).round() ;
+    return  distance ==0 ? 0 :  (   Math.atan(elevetionDiff/distance)  / Math.pi * 180  ).round() ;
   }
 }
 

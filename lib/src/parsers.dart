@@ -7,9 +7,8 @@ class GpxFileParser{
       TraceRawData traceRawData = new TraceRawData();
       List<TracePoint> points = traceRawData.points;
       
-      var parser = new XmlParser();
-      XmlDocument xmlDocument = parser.parse(gpxFileContent).value;
-      Iterator allNodesIter= xmlDocument.where((xmlNode) =>(xmlNode is XmlElement )).iterator ;
+      XmlDocument xmlDocument = parse(gpxFileContent);
+      Iterator allNodesIter= xmlDocument.descendants.where((xmlNode) =>(xmlNode is XmlElement )).iterator ;
       num index = 0;
       TracePoint previousPoint = null;
       for (; allNodesIter.moveNext();) {
@@ -29,7 +28,7 @@ class GpxFileParser{
           currentPoint.latitude  =  double.parse( trkptElement.getAttribute("lat") );
           currentPoint.longitude =  double.parse( trkptElement.getAttribute("lon") );        
           
-          Iterator eleIterator =  trkptElement.where((xmlNode) =>(xmlNode is XmlElement ) ).iterator ;
+          Iterator eleIterator =  trkptElement.descendants.where((xmlNode) =>(xmlNode is XmlElement ) ).iterator ;
           for  ( ;eleIterator.moveNext() ;){
             XmlElement eleElement = eleIterator.current;
             if (eleElement.name.toString() != "ele"){
